@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="user"
+            type="com.hdcompany.admin.model.User" />
+
+        <variable
+            name="userAuthenticated"
+            type="com.hdcompany.admin.model.User" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_login_screen"
+        tools:context=".activity.RegisterActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/google_login_click"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login_screen">
+
+            <View
+                android:id="@+id/google_icon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/google_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_in_with_google"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/google_icon"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <FrameLayout
+            android:id="@+id/login_screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/signupButton"
+                android:layout_width="400dp"
+                android:layout_height="400dp"
+                android:layout_marginStart="66dp"
+                android:layout_marginTop="140dp"
+                android:layout_marginEnd="-50dp"
+                android:background="@drawable/large_circle" />
+
+            <FrameLayout
+                android:id="@+id/login_click_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="142dp"
+                android:layout_marginTop="417dp">
+
+                <ImageView
+                    android:id="@+id/rectangle_3"
+                    android:layout_width="149dp"
+                    android:layout_height="48dp"
+                    android:contentDescription="@string/content_description"
+                    android:src="@drawable/button_border" />
+
+                <TextView
+                    android:id="@+id/login"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:textAlignment="center"
+                    android:text="@string/signup_string"
+                    android:textColor="@color/bg_white"
+                    android:textSize="20sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/group_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-34dp"
+                android:layout_marginTop="20dp">
+
+                <View
+                    android:id="@+id/ellipse_2"
+                    android:layout_width="240dp"
+                    android:layout_height="240dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@drawable/small_circle" />
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:id="@+id/login_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:textAlignment="center"
+                    android:text="@string/signup_string"
+                    android:textColor="@color/bg_login_button"
+                    android:textSize="30sp"
+                    tools:ignore="RtlHardcoded" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/have_an_account_click"
+                android:layout_width="wrap_content"
+                android:layout_height="17.2dp"
+                android:layout_marginStart="230dp"
+                android:layout_marginTop="370dp"
+                android:text="@string/have_an_account_string"
+                android:textColor="@color/highlight_red"
+                android:textSize="12sp"
+                tools:ignore="RtlHardcoded" />
+
+            <RelativeLayout
+                android:id="@+id/group_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="153dp"
+                android:layout_marginTop="183dp">
+
+                <EditText
+                    android:id="@+id/editUserName"
+                    android:layout_width="240dp"
+                    android:layout_height="50dp"
+                    android:autofillHints=""
+                    android:background="@drawable/edit_text_border"
+                    android:foregroundGravity="center"
+                    android:hint="@string/username_string"
+                    android:inputType="text"
+                    android:paddingStart="20dp"
+                    android:text="@={user.username}"
+                    tools:ignore="RtlSymmetry" />
+
+                <ImageView
+                    android:id="@+id/vector_person"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="208dp"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/content_description"
+                    android:src="@drawable/person" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/group_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="153dp"
+                android:layout_marginTop="249dp">
+
+                <EditText
+                    android:id="@+id/editPassword"
+                    android:layout_width="240dp"
+                    android:layout_height="50dp"
+                    android:autofillHints=""
+                    android:background="@drawable/edit_text_border"
+                    android:hint="@string/password_string"
+                    android:inputType="textPassword"
+                    android:paddingStart="20dp"
+                    android:text="@={user.password}"
+                    android:textColor="@color/bg_white"
+                    tools:ignore="RtlSymmetry" />
+
+                <ImageView
+                    android:id="@+id/vector_shield"
+                    android:layout_width="21dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="205dp"
+                    android:layout_marginTop="13dp"
+                    android:contentDescription="@string/content_description"
+                    android:src="@drawable/shield" />
+
+                <ImageView
+                    android:id="@+id/vector_lock_hole"
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_marginStart="211dp"
+                    android:layout_marginTop="21dp"
+                    android:contentDescription="@string/content_description"
+                    android:src="@drawable/lock_hole" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/group_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="153dp"
+                android:layout_marginTop="315dp">
+
+                <EditText
+                    android:id="@+id/editPasswordVerify"
+                    android:layout_width="240dp"
+                    android:layout_height="50dp"
+                    android:autofillHints=""
+                    android:background="@drawable/edit_text_border"
+                    android:hint="@string/verify_password"
+                    android:inputType="textPassword"
+                    android:paddingStart="20dp"
+                    android:text="@={user.password}"
+                    android:textColor="@color/bg_white"
+                    tools:ignore="RtlSymmetry" />
+
+
+                    <ImageView
+                        android:id="@+id/vector_shield2"
+                        android:layout_width="21dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="205dp"
+                        android:layout_marginTop="13dp"
+                        android:contentDescription="@string/content_description"
+                        android:src="@drawable/shield" />
+
+                    <ImageView
+                        android:id="@+id/vector_v_sign"
+                        android:layout_width="9dp"
+
+                        android:layout_height="9dp"
+                        android:layout_marginStart="211dp"
+                        android:layout_marginTop="21dp"
+                        android:contentDescription="@string/content_description"
+                        android:src="@drawable/v_sign" />
+            </RelativeLayout>
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
