@@ -13,6 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.hdcompany.admin.MainActivity;
 import com.hdcompany.admin.databinding.ActivityRegisterBinding;
 import com.hdcompany.admin.firebase.Auth;
@@ -31,6 +32,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(registerBinding.getRoot());
         initUserData();
         setOnClick();
+        // Get Client
+        client = GoogleSignIn.getClient(this, Auth.gso);
     }
 
     private void setOnClick() {
@@ -50,12 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
         registerBinding.signupButton.setOnClickListener(v -> {
             try {
-                userAuthenticated = Auth.signUpAuth(this, user);
-                System.out.println("User Authenticated: " + userAuthenticated.toString());
-                if (Auth.firebaseAuth.getCurrentUser() != null) {
-                    Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
-
-                }
+                Auth.signUpAuth(this, user);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -63,10 +61,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerBinding.googleLoginClick.setOnClickListener(v -> {
             googleSignIn();
-            if (Auth.firebaseAuth.getCurrentUser() != null) {
-                Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
-
-            }
         });
     }
 
@@ -87,6 +81,33 @@ public class RegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        // If done with sign in
+        forwardScreen();
+    }
+
+
+    private void forwardScreen() {
+        try {
+            FirebaseUser user = Auth.firebaseAuth.getCurrentUser();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (user != null) {
+                        takeLoginAction();
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, 1500);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void takeLoginAction() {
+        Intent i = new Intent(this, SignOutActivity.class);
+        this.startActivity(i);
+        this.finish();
     }
 
     private void forwardToLogin() {

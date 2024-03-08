@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.hdcompany.admin.activity.RegisterActivity;
 import com.hdcompany.admin.activity.SignOutActivity;
 import com.hdcompany.admin.databinding.LoginScreenBinding;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private void setOnClick() {
 
         /*
-        Set Click Event
+        Set Click Event SIGN UP
          */
         loginScreenBinding.signUpClickTitle.setOnClickListener(v -> {
             try {
@@ -65,27 +66,30 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        /*
+        Button forgot
+         */
         loginScreenBinding.forgotPasswordClickTitle.setOnClickListener(v -> {
             Toast.makeText(this, "Soon", Toast.LENGTH_SHORT).show();
         });
+
+        /*
+        Login Button
+         */
         loginScreenBinding.loginButton.setOnClickListener(v -> {
             try {
-                userAuthenticated = Auth.loginAuth(this, user);
-                System.out.println("User Authenticated: " + userAuthenticated.toString());
-                if (Auth.firebaseAuth.getCurrentUser() != null) {
-                    Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
-
-                }
+              Auth.loginAuth(this, user);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            forwardScreen();
         });
-
+        /*
+        GOOGLE LOGIN
+         */
         loginScreenBinding.googleLoginClick.setOnClickListener(v -> {
             googleSignIn();
-            if (Auth.firebaseAuth.getCurrentUser() != null) {
-                Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
-            }
         });
     }
 
@@ -106,24 +110,42 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        try{
+        // End the task, and got the user
+        /*
+        Forward to the next screen. Logout
+         */
+        forwardScreen();
+    }
+
+    /*
+    FORWARD TO LOGOUT
+     */
+    private void forwardScreen() {
+        try {
+            FirebaseUser user = Auth.firebaseAuth.getCurrentUser();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    takeLoginAction();
+                    if (user != null) {
+                        takeLoginAction();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }, 1000);
-        }catch (Exception e){
+            }, 1500);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
-    private void takeLoginAction(){
+    /*
+    FORWARD TO LOGOUT
+     */
+    private void takeLoginAction() {
         Intent i = new Intent(this, SignOutActivity.class);
         this.startActivity(i);
         this.finish();
     }
+
     private void forwardToSignUp() {
         Intent i = new Intent(this, RegisterActivity.class);
         this.startActivity(i);

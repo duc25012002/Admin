@@ -5,6 +5,7 @@ package com.hdcompany.admin.firebase;
 import android.app.Activity;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.hdcompany.admin.model.User;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Auth {
     public static FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -36,23 +38,24 @@ public class Auth {
 
     public static void firebaseAuthen(String idToken){
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken,null);
+        String username = "ERROR";
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         HashMap<String, Object> map = new HashMap<>();
+                        assert user != null;
                         map.put("id", user.getUid());
                         map.put("name", user.getDisplayName());
-                        map.put("profile", user.getPhotoUrl().toString());
+                        map.put("profile", Objects.requireNonNull(user.getPhotoUrl()).toString());
                         firebaseDatabase.getReference().child("users").child(user.getUid()).setValue(map);
-
                     }
                 }
         );
-//        return firebaseAuth.getCurrentUser().getEmail();
+
     }
-    public static User loginAuth(Activity activity, User user){
+    public static void loginAuth(Activity activity, User user){
         firebaseAuth.signInWithEmailAndPassword(user.getUsername().trim(), user.getPassword().trim()).addOnCompleteListener(
                 activity,
                 task -> {
@@ -68,9 +71,9 @@ public class Auth {
                     }
                 }
         );
-        return user;
+//        return user;
     }
-    public static User signUpAuth(Activity activity, User user){
+    public static void signUpAuth(Activity activity, User user){
         firebaseAuth.createUserWithEmailAndPassword(user.getUsername().trim(), user.getPassword().trim()).addOnCompleteListener(
                 task -> {
                     if (task.isSuccessful()) {
@@ -91,6 +94,6 @@ public class Auth {
                     }
                 }
         );
-        return user;
+//        return user;
     }
 }

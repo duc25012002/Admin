@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
 import com.hdcompany.admin.R;
 import com.hdcompany.admin.databinding.ActivitySignOutBinding;
@@ -33,6 +34,8 @@ public class SignOutActivity extends AppCompatActivity {
     private void setOnClick(){
         signOutBinding.signOutButton.setOnClickListener(v->{
             Auth.firebaseAuth.signOut();
+            Toast.makeText(this, "SIGNED OUT", Toast.LENGTH_SHORT).show();
+            user.setUsername("@ signed out @");
         });
     }
 }
