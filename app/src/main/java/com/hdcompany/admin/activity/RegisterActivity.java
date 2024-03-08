@@ -1,47 +1,35 @@
-package com.hdcompany.admin;
-
+package com.hdcompany.admin.activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 
-
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
-import com.hdcompany.admin.activity.RegisterActivity;
-import com.hdcompany.admin.activity.SignOutActivity;
-import com.hdcompany.admin.databinding.LoginScreenBinding;
+import com.hdcompany.admin.MainActivity;
+import com.hdcompany.admin.databinding.ActivityRegisterBinding;
 import com.hdcompany.admin.firebase.Auth;
 import com.hdcompany.admin.model.User;
 
-import io.grpc.TlsServerCredentials;
-
-public class MainActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
     private GoogleSignInClient client;
     private static final int RC_SIGN_IN = 20;
-    private LoginScreenBinding loginScreenBinding;
+    private ActivityRegisterBinding registerBinding;
     private User user, userAuthenticated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loginScreenBinding = LoginScreenBinding.inflate(getLayoutInflater());
-        setContentView(loginScreenBinding.getRoot());
+        registerBinding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        setContentView(registerBinding.getRoot());
         initUserData();
         setOnClick();
         // Get Client
@@ -50,15 +38,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setOnClick() {
 
-        /*
-        Set Click Event SIGN UP
-         */
-        loginScreenBinding.signUpClickTitle.setOnClickListener(v -> {
+        registerBinding.haveAnAccountClick.setOnClickListener(v -> {
             try {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        forwardToSignUp();
+                        forwardToLogin();
                     }
                 }, 600);
             } catch (Exception e) {
@@ -66,29 +51,15 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
-        /*
-        Button forgot
-         */
-        loginScreenBinding.forgotPasswordClickTitle.setOnClickListener(v -> {
-            Toast.makeText(this, "Soon", Toast.LENGTH_SHORT).show();
-        });
-
-        /*
-        Login Button
-         */
-        loginScreenBinding.loginButton.setOnClickListener(v -> {
+        registerBinding.signupButton.setOnClickListener(v -> {
             try {
-              Auth.loginAuth(this, user);
+                Auth.signUpAuth(this, user);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            forwardScreen();
         });
-        /*
-        GOOGLE LOGIN
-         */
-        loginScreenBinding.googleLoginClick.setOnClickListener(v -> {
+
+        registerBinding.googleLoginClick.setOnClickListener(v -> {
             googleSignIn();
         });
     }
@@ -110,16 +81,11 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        // End the task, and got the user
-        /*
-        Forward to the next screen. Logout
-         */
+        // If done with sign in
         forwardScreen();
     }
 
-    /*
-    FORWARD TO LOGOUT
-     */
+
     private void forwardScreen() {
         try {
             FirebaseUser user = Auth.firebaseAuth.getCurrentUser();
@@ -129,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     if (user != null) {
                         takeLoginAction();
                     } else {
-                        Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     }
                 }
             }, 1500);
@@ -137,31 +103,26 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    /*
-    FORWARD TO LOGOUT
-     */
+
     private void takeLoginAction() {
         Intent i = new Intent(this, SignOutActivity.class);
         this.startActivity(i);
         this.finish();
     }
 
-    private void forwardToSignUp() {
-        Intent i = new Intent(this, RegisterActivity.class);
+    private void forwardToLogin() {
+        Intent i = new Intent(this, MainActivity.class);
         this.startActivity(i);
         this.finish();
     }
 
     private void initUserData() {
         this.user = new User();
-        System.out.println(this.user.toString());
+        System.out.println("User: " + this.user.toString());
         this.userAuthenticated = new User();
-        System.out.println(this.userAuthenticated.toString());
-        /*
-        Binding User
-         */
-        loginScreenBinding.setUser(user);
-        loginScreenBinding.setUserAuthenticated(userAuthenticated);
+        System.out.println("Auth: " + this.userAuthenticated.toString());
+        registerBinding.setUser(user);
+        registerBinding.setUserAuthenticated(userAuthenticated);
     }
 
 

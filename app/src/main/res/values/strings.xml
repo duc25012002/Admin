@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Admin</string>
+
+    <string name="ek_img_content">ExportKit Image</string>
+    <string name="login_string">Login</string>
+    <string name="username_string">Username</string>
+    <string name="password_string">Password</string>
+    <string name="signup_string">Sign up</string>
+    <string name="verify_password">Verify Password</string>
+    <string name="forgot_password_string"><u>Forgot your password?</u></string>
+    <string name="sign_up_string"><u>Sign up</u></string>
+    <string name="content_description">No Content</string>
+    <string name="have_an_account_string">Have an account?</string>
+    <string name="sign_in_with_google"><u>Sign in with Google</u></string>
+    <string name="default_web_client_id">994449845746-jk1r9sem3313o2o07nqp86t9ookcq9kv.apps.googleusercontent.com</string>
+
 </resources>
