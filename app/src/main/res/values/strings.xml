@@ -13,5 +13,8 @@
     <string name="have_an_account_string">Have an account?</string>
     <string name="sign_in_with_google"><u>Sign in with Google</u></string>
     <string name="default_web_client_id">994449845746-jk1r9sem3313o2o07nqp86t9ookcq9kv.apps.googleusercontent.com</string>
+    <string name="home">Home</string>
+    <string name="profile">Me</string>
+    <string name="sign_out">Sign out</string>
 
 </resources>

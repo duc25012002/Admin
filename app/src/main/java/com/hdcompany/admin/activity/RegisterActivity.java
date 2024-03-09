@@ -23,7 +23,9 @@ public class RegisterActivity extends AppCompatActivity {
     private GoogleSignInClient client;
     private static final int RC_SIGN_IN = 20;
     private ActivityRegisterBinding registerBinding;
-    private User user, userAuthenticated;
+    private User user;
+
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
         client = GoogleSignIn.getClient(this, Auth.gso);
     }
 
-    private void setOnClick() {
+     private void setOnClick() {
 
         registerBinding.haveAnAccountClick.setOnClickListener(v -> {
             try {
@@ -53,7 +55,14 @@ public class RegisterActivity extends AppCompatActivity {
         });
         registerBinding.signupButton.setOnClickListener(v -> {
             try {
-                Auth.signUpAuth(this, user);
+                if(
+                        !user.getUsername().equals("") && !user.getPassword().equals("")
+                ){
+                    firebaseUser = Auth.loginAuth(this,user);
+                    firebaseUser = Auth.firebaseAuth().getCurrentUser();
+                }else{
+                    Toast.makeText(this, "Please don't leave any empty information!", Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -64,41 +73,49 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void googleSignIn() {
+     private void googleSignIn() {
         Intent i = client.getSignInIntent();
         this.startActivityForResult(i, RC_SIGN_IN);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    synchronized protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Auth.firebaseAuthen(account.getIdToken());
+                firebaseUser = Auth.firebaseAuthen(account.getIdToken());
+                firebaseUser = Auth.firebaseAuth().getCurrentUser();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        // If done with sign in
         forwardScreen();
     }
 
 
     private void forwardScreen() {
         try {
-            FirebaseUser user = Auth.firebaseAuth.getCurrentUser();
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (user != null) {
+                    try{
+                        String email = firebaseUser.getEmail();
+                        for(int i=0;i<10;i++){
+                            System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email );
+                        }
                         takeLoginAction();
-                    } else {
+                    }catch (Exception e){
+                        for(int i=0;i<10;i++){
+                            System.out.println("LOGIN ERROR");
+                        }
+                        e.printStackTrace();
                         Toast.makeText(RegisterActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     }
                 }
-            }, 1500);
+            }, 3000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,11 +136,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void initUserData() {
         this.user = new User();
         System.out.println("User: " + this.user.toString());
-        this.userAuthenticated = new User();
-        System.out.println("Auth: " + this.userAuthenticated.toString());
         registerBinding.setUser(user);
-        registerBinding.setUserAuthenticated(userAuthenticated);
+
     }
-
-
 }

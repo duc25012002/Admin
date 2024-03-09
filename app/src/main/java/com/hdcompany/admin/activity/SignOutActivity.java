@@ -26,16 +26,25 @@ public class SignOutActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                user.setUsername(Auth.firebaseAuth.getCurrentUser().getEmail());
+                user.setUsername(Auth.firebaseAuth().getCurrentUser().getEmail());
             }
-        },1500);
+        },1000);
     }
 
     private void setOnClick(){
         signOutBinding.signOutButton.setOnClickListener(v->{
-            Auth.firebaseAuth.signOut();
-            Toast.makeText(this, "SIGNED OUT", Toast.LENGTH_SHORT).show();
-            user.setUsername("@ signed out @");
+            Toast.makeText(this, "App close in 2 seconds", Toast.LENGTH_SHORT).show();
+            user.setUsername("Signed out");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Auth.firebaseAuth().signOut();
+                    onFinish();
+                }
+            },2000);
         });
+    }
+    private void onFinish(){
+        this.finish();
     }
 }

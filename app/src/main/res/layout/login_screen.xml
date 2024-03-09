@@ -55,17 +55,17 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <View
-                android:id="@+id/loginButton"
+                android:id="@+id/loginView"
                 android:layout_width="400dp"
                 android:layout_height="400dp"
                 android:layout_marginStart="66dp"
                 android:layout_marginTop="140dp"
                 android:layout_marginEnd="-50dp"
 
-                android:background="@drawable/large_circle" />
+                android:background="@drawable/large_circle_update" />
 
             <FrameLayout
-                android:id="@+id/login_click_view"
+                android:id="@+id/loginButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="142dp"
@@ -101,7 +101,7 @@
                     android:layout_height="240dp"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="0dp"
-                    android:background="@drawable/small_circle" />
+                    android:background="@drawable/small_circle_updated" />
 
                 <TextView
                     android:id="@+id/login_title"
@@ -122,6 +122,7 @@
                 android:layout_marginStart="230dp"
                 android:layout_marginTop="370dp"
                 android:text="@string/forgot_password_string"
+                android:textStyle="bold"
                 android:textColor="@color/highlight_red"
                 android:textSize="12sp"
                 tools:ignore="RtlHardcoded" />
@@ -134,6 +135,7 @@
                 android:layout_marginStart="60dp"
                 android:layout_marginTop="230dp"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:text="@string/sign_up_string"
                 android:textColor="@color/highlight_red"
                 android:textSize="12sp" />
@@ -154,6 +156,8 @@
                     android:background="@drawable/edit_text_border"
                     android:foregroundGravity="center"
                     android:hint="@string/username_string"
+                    android:textColorHint="@color/text_hint_color"
+                    android:textColor="@color/text_color"
                     android:inputType="text"
                     android:paddingStart="20dp"
                     android:text="@={user.username}"
@@ -161,12 +165,12 @@
 
                 <ImageView
                     android:id="@+id/vector_person"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginStart="208dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="200dp"
+                    android:layout_marginTop="10dp"
                     android:contentDescription="@string/content_description"
-                    android:src="@drawable/person" />
+                    android:src="@drawable/shield_user" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -183,29 +187,21 @@
                     android:autofillHints=""
                     android:background="@drawable/edit_text_border"
                     android:hint="@string/password_string"
+                    android:textColorHint="@color/text_hint_color"
                     android:inputType="textPassword"
                     android:paddingStart="20dp"
                     android:text="@={user.password}"
-                    android:textColor="@color/bg_white"
+                    android:textColor="@color/text_color"
                     tools:ignore="RtlSymmetry" />
 
                 <ImageView
                     android:id="@+id/vector_shield"
-                    android:layout_width="21dp"
+                    android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginStart="205dp"
-                    android:layout_marginTop="13dp"
+                    android:layout_marginStart="200dp"
+                    android:layout_marginTop="10dp"
                     android:contentDescription="@string/content_description"
-                    android:src="@drawable/shield" />
-
-                <ImageView
-                    android:id="@+id/vector_lock_hole"
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_marginStart="211dp"
-                    android:layout_marginTop="21dp"
-                    android:contentDescription="@string/content_description"
-                    android:src="@drawable/lock_hole" />
+                    android:src="@drawable/shield_keyhole" />
             </RelativeLayout>
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hdcompany.admin.activity.RegisterActivity;
 import com.hdcompany.admin.activity.SignOutActivity;
@@ -35,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient client;
     private static final int RC_SIGN_IN = 20;
     private LoginScreenBinding loginScreenBinding;
-    private User user, userAuthenticated;
+    private User user;
+
+    private FirebaseUser firebaseUser = Auth.firebaseAuth().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         client = GoogleSignIn.getClient(this, Auth.gso);
     }
 
-    private void setOnClick() {
+      private void setOnClick() {
 
         /*
         Set Click Event SIGN UP
@@ -78,12 +81,19 @@ public class MainActivity extends AppCompatActivity {
         Login Button
          */
         loginScreenBinding.loginButton.setOnClickListener(v -> {
-            try {
-              Auth.loginAuth(this, user);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            forwardScreen();
+          try{
+              if(
+                      !user.getUsername().equals("") && !user.getPassword().equals("")
+              ){
+                  firebaseUser = Auth.loginAuth(this,user);
+                  firebaseUser = Auth.firebaseAuth().getCurrentUser();
+                  forwardScreen();
+              }else{
+                  Toast.makeText(this, "Please don't leave any empty information!", Toast.LENGTH_SHORT).show();
+              }
+          }catch (Exception e){
+              e.printStackTrace();
+          }
         });
         /*
         GOOGLE LOGIN
@@ -93,46 +103,54 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void googleSignIn() {
+     private void googleSignIn() {
         Intent i = client.getSignInIntent();
         this.startActivityForResult(i, RC_SIGN_IN);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    synchronized protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Auth.firebaseAuthen(account.getIdToken());
+                firebaseUser = Auth.firebaseAuthen(account.getIdToken());
+                firebaseUser = Auth.firebaseAuth().getCurrentUser();
+                /*
+                Forward to the next screen. Logout
+                */
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         // End the task, and got the user
-        /*
-        Forward to the next screen. Logout
-         */
         forwardScreen();
     }
 
     /*
     FORWARD TO LOGOUT
      */
-    private void forwardScreen() {
+     private void forwardScreen() {
         try {
-            FirebaseUser user = Auth.firebaseAuth.getCurrentUser();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (user != null) {
+                    try{
+                        String email = firebaseUser.getEmail();
+                        for(int i=0;i<10;i++){
+                            System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email );
+                        }
                         takeLoginAction();
-                    } else {
+                    }catch (Exception e){
+                       for(int i=0;i<10;i++){
+                           System.out.println("LOGIN ERROR");
+                       }
+                        e.printStackTrace();
                         Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     }
-                }
-            }, 1500);
+                    }
+            }, 3000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -155,13 +173,10 @@ public class MainActivity extends AppCompatActivity {
     private void initUserData() {
         this.user = new User();
         System.out.println(this.user.toString());
-        this.userAuthenticated = new User();
-        System.out.println(this.userAuthenticated.toString());
         /*
         Binding User
          */
         loginScreenBinding.setUser(user);
-        loginScreenBinding.setUserAuthenticated(userAuthenticated);
     }
 
 
