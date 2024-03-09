@@ -137,6 +137,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     try{
+                        do{
+                            firebaseUser = Auth.firebaseAuth().getCurrentUser();
+                        }
+                        while(firebaseUser == null);
                         String email = firebaseUser.getEmail();
                         for(int i=0;i<10;i++){
                             System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email );
