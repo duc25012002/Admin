@@ -2,8 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
-        android:icon="@drawable/shop_not_select"
-        android:title="@string/home" />
+        android:icon="@drawable/shop_selected"
+        android:title="@string/home"
+        android:checked="true"/>
+    <item
+        android:id="@+id/nav_cart"
+        android:icon="@drawable/cart_not_select"
+        android:title="@string/cart" />
+    <item
+        android:id="@+id/nav_notify"
+        android:icon="@drawable/no_news_notify_not_selected"
+        android:title="@string/notify" />
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/profile_not_select"

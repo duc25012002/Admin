@@ -1,7 +1,6 @@
 package com.hdcompany.admin.firebase;
 
 
-
 import android.app.Activity;
 
 import android.content.Intent;
@@ -29,19 +28,25 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Auth {
-    public static FirebaseAuth firebaseAuth(){
-      return FirebaseAuth.getInstance();
+    public static FirebaseAuth firebaseAuth() {
+        return FirebaseAuth.getInstance();
     }
-    public static FirebaseDatabase firebaseDatabase() { return FirebaseDatabase.getInstance();
+
+    public static FirebaseDatabase firebaseDatabase() {
+        return FirebaseDatabase.getInstance();
     }
+
     public static GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("994449845746-jk1r9sem3313o2o07nqp86t9ookcq9kv.apps.googleusercontent.com")
             .requestEmail().build();
 
-    public static FirebaseUser firebaseAuthen(String idToken){
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken,null);
+    /*
+    AUTHENTICATE FOR GOOGLE SIGN IN
+     */
+    public static FirebaseUser firebaseAuthen(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         String username = "ERROR";
-       firebaseAuth().signInWithCredential(credential).addOnCompleteListener(
+        firebaseAuth().signInWithCredential(credential).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -55,19 +60,23 @@ public class Auth {
                     }
                 }
         );
-    return firebaseAuth().getCurrentUser();
+        return firebaseAuth().getCurrentUser();
     }
-    public static FirebaseUser loginAuth(Activity activity, User user){
+
+    /*
+    LOGIN USE EMAIL AND PASSWORD
+     */
+    public static FirebaseUser loginAuth(Activity activity, User user) {
         firebaseAuth().signInWithEmailAndPassword(user.getUsername().trim(), user.getPassword().trim()).addOnCompleteListener(
                 activity,
                 task -> {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
 
-                            System.out.println("Sign in with Email & Password success!");
+                        System.out.println("Sign in with Email & Password success!");
 //                            FirebaseUser signed = firebaseAuth.getCurrentUser();
-                            Toast.makeText(activity, "Sign in with Email & Password success!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "Sign in with Email & Password success!", Toast.LENGTH_SHORT).show();
 
-                    }else{
+                    } else {
                         System.out.println("Sign in with Email & Password failed!");
                         user.setUsername("");
                         user.setPassword("");
@@ -77,14 +86,18 @@ public class Auth {
         );
         return firebaseAuth().getCurrentUser();
     }
-    public static FirebaseUser signUpAuth(Activity activity, User user){
+
+    /*
+    SIGN UP USE EMAIL AND PASSWORD
+     */
+    public static FirebaseUser signUpAuth(Activity activity, User user) {
         firebaseAuth().createUserWithEmailAndPassword(user.getUsername().trim(), user.getPassword().trim()).addOnCompleteListener(
                 task -> {
                     if (task.isSuccessful()) {
 
-                         // Sign in success, update UI with the signed-in user's information
-                         Toast.makeText(activity, "Sign up with Email & Password success!",
-                                 Toast.LENGTH_SHORT).show();
+                        // Sign in success, update UI with the signed-in user's information
+                        Toast.makeText(activity, "Sign up with Email & Password success!",
+                                Toast.LENGTH_SHORT).show();
 //                        Log.d(TAG, "createUserWithEmail:success");
 //                        FirebaseUser user = mAuth.getCurrentUser();
 //                        updateUI(user);

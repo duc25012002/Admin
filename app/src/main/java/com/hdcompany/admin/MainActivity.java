@@ -24,6 +24,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.hdcompany.admin.activity.PrimeActivity;
 import com.hdcompany.admin.activity.RegisterActivity;
 import com.hdcompany.admin.activity.SignOutActivity;
 import com.hdcompany.admin.databinding.LoginScreenBinding;
@@ -38,7 +39,16 @@ public class MainActivity extends AppCompatActivity {
     private LoginScreenBinding loginScreenBinding;
     private User user;
 
-    private FirebaseUser firebaseUser = Auth.firebaseAuth().getCurrentUser();
+    private FirebaseUser firebaseUser;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseUser = Auth.firebaseAuth().getCurrentUser();
+        if (firebaseUser != null) {
+            forwardPrime();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         client = GoogleSignIn.getClient(this, Auth.gso);
     }
 
-      private void setOnClick() {
+    private void setOnClick() {
 
         /*
         Set Click Event SIGN UP
@@ -81,19 +91,17 @@ public class MainActivity extends AppCompatActivity {
         Login Button
          */
         loginScreenBinding.loginButton.setOnClickListener(v -> {
-          try{
-              if(
-                      !user.getUsername().equals("") && !user.getPassword().equals("")
-              ){
-                  firebaseUser = Auth.loginAuth(this,user);
-                  firebaseUser = Auth.firebaseAuth().getCurrentUser();
-                  forwardScreen();
-              }else{
-                  Toast.makeText(this, "Please don't leave any empty information!", Toast.LENGTH_SHORT).show();
-              }
-          }catch (Exception e){
-              e.printStackTrace();
-          }
+            try {
+                if (!user.getUsername().equals("") && !user.getPassword().equals("")) {
+                    firebaseUser = Auth.loginAuth(this, user);
+                    firebaseUser = Auth.firebaseAuth().getCurrentUser();
+                    forwardPrime();
+                } else {
+                    Toast.makeText(this, "Please don't leave any empty information!", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
         /*
         GOOGLE LOGIN
@@ -103,11 +111,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-     private void googleSignIn() {
+    /*
+    GOOGLE SIGN IN
+     */
+    private void googleSignIn() {
         Intent i = client.getSignInIntent();
         this.startActivityForResult(i, RC_SIGN_IN);
     }
 
+    /*
+    GOOGLE SIGN IN
+     */
     @Override
     synchronized protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -125,39 +139,71 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         // End the task, and got the user
-        forwardScreen();
+        forwardPrime();
     }
 
     /*
     FORWARD TO LOGOUT
      */
-     private void forwardScreen() {
+    private void forwardScreen() {
         try {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    try{
-                        do{
+                    try {
+                        do {
                             firebaseUser = Auth.firebaseAuth().getCurrentUser();
-                        }
-                        while(firebaseUser == null);
+                        } while (firebaseUser == null);
                         String email = firebaseUser.getEmail();
-                        for(int i=0;i<10;i++){
-                            System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email );
+                        for (int i = 0; i < 10; i++) {
+                            System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email);
                         }
                         takeLoginAction();
-                    }catch (Exception e){
-                       for(int i=0;i<10;i++){
-                           System.out.println("LOGIN ERROR");
-                       }
+                    } catch (Exception e) {
+                        for (int i = 0; i < 10; i++) {
+                            System.out.println("LOGIN ERROR");
+                        }
                         e.printStackTrace();
                         Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     }
-                    }
+                }
             }, 3000);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void forwardPrime(){
+        try {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        do {
+                            firebaseUser = Auth.firebaseAuth().getCurrentUser();
+                        } while (firebaseUser == null);
+                        String email = firebaseUser.getEmail();
+                        for (int i = 0; i < 10; i++) {
+                            System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email);
+                        }
+                        takeLoginPrimeAction();
+
+                    } catch (Exception e) {
+                        for (int i = 0; i < 10; i++) {
+                            System.out.println("LOGIN ERROR");
+                        }
+                        e.printStackTrace();
+                        Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, 1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void takeLoginPrimeAction(){
+        this.startActivity(new Intent(this, PrimeActivity.class));
     }
     /*
     FORWARD TO LOGOUT
@@ -168,12 +214,18 @@ public class MainActivity extends AppCompatActivity {
         this.finish();
     }
 
+    /*
+    FORWARD TO SIGN UP
+     */
     private void forwardToSignUp() {
         Intent i = new Intent(this, RegisterActivity.class);
         this.startActivity(i);
         this.finish();
     }
 
+    /*
+    INIT BINDING VIEW DATA
+     */
     private void initUserData() {
         this.user = new User();
         System.out.println(this.user.toString());

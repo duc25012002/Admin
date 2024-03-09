@@ -16,5 +16,7 @@
     <string name="home">Home</string>
     <string name="profile">Me</string>
     <string name="sign_out">Sign out</string>
+    <string name="notify">Notify</string>
+    <string name="cart">Cart</string>
 
 </resources>
