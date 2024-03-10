@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.hdcompany.admin.R;
 import com.hdcompany.admin.adapter.ProductLoadStateRCVAdapter;
 import com.hdcompany.admin.adapter.ProductRCVAdapter;
 import com.hdcompany.admin.databinding.FragmentShopBinding;
+import com.hdcompany.admin.firebase.Auth;
 import com.hdcompany.admin.listener.IOnClickListener;
 import com.hdcompany.admin.model.Product;
 import com.hdcompany.admin.utility.Constant;
@@ -86,8 +88,12 @@ public class ShopFragment extends Fragment {
     private FragmentShopBinding shopBinding;
     private Context context;
     private ProductRCVAdapter shopAdapter;
+    /*
+    Key for limited loading data
+     */
+    private String key = null;
+    private boolean loadState = false;
 
-    private List<Product> products =  new ArrayList<>();;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,53 +106,99 @@ public class ShopFragment extends Fragment {
             Utility.hideSoftKeyboard(getActivity());
         });
 
+        InitRecyclerViewAdapter();
         getProductsFromFirebase();
-
         return shopBinding.getRoot();
     }
 
     private void getProductsFromFirebase(){
-        MyApplication.get(this.context).getProductsDBRef().addValueEventListener(new ValueEventListener() {
+        Auth.getLimitedProducts(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for(DataSnapshot dataSnapshot :snapshot.getChildren()){
-                    Product product = dataSnapshot.getValue(Product.class);
-                    if(product == null)return;
-                    products.add(0,product);
-                    System.out.println("ProductName: " + product.getName());
+                List<Product> products =  new ArrayList<>();
+                for(DataSnapshot data : snapshot.getChildren()){
+                    Product product = data.getValue(Product.class);
+                    products.add(product);
+                    key = data.getKey();
+                    System.out.println("KEY : " + key);
                 }
-                System.out.println(products.get(0).getName());
-                InitRecyclerViewAdapter();
+                shopAdapter.setProducts(products);
+                shopAdapter.notifyDataSetChanged();
+                loadState = false;
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(context, Constant.GENERIC_ERROR, Toast.LENGTH_SHORT).show();
+
             }
         });
+//        MyApplication.get(this.context).getProductsDBRef().addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                for(DataSnapshot dataSnapshot :snapshot.getChildren()){
+//                    Product product = dataSnapshot.getValue(Product.class);
+//                    if(product == null)return;
+//                    products.add(0,product);
+//                    System.out.println("ProductName: " + product.getName());
+//                }
+//                InitRecyclerViewAdapter();
+//                shopAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Toast.makeText(context, Constant.GENERIC_ERROR, Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     private void InitRecyclerViewAdapter(){
+        /*
+        Setting recyclerView
+         */
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this.context,2);
         shopBinding.shopRecyclerView.setLayoutManager(gridLayoutManager);
         shopBinding.shopRecyclerView.addItemDecoration(new GridSpace(2,20,true));
-        shopAdapter = new ProductRCVAdapter(products, new IOnClickListener() {
+        /*
+        Set event click
+         */
+        shopAdapter = new ProductRCVAdapter(getActivity(), new IOnClickListener() {
             @Override
             public void onClickItemProduct(Product product) {
                 Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show();
                 Utility.hideSoftKeyboard(getActivity());
             }
         });
+        /*
+        Bind List
+         */
         shopBinding.shopRecyclerView.setAdapter(shopAdapter);
-        shopAdapter.notifyDataSetChanged();
+        /*
+        Adding spacing between item in list
+         */
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 return shopAdapter.getItemViewType(position) == ProductRCVAdapter.LOADING_ITEM?1:2;
             }
         });
+
+        /*
+        Loading state wile scrolling
+         */
+        shopBinding.shopRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                GridLayoutManager instanceLayoutManager = (GridLayoutManager)recyclerView.getLayoutManager();
+                int TotalItem = instanceLayoutManager.getItemCount();
+                int LastItemVisible = instanceLayoutManager.findLastCompletelyVisibleItemPosition();
+                if(TotalItem < (LastItemVisible + 3)){
+                    loadState = true;
+                    getProductsFromFirebase();
+                }
+            }
+        });
     }
-
-
 }

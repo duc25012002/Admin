@@ -1,5 +1,6 @@
 package com.hdcompany.admin.adapter;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -15,6 +16,7 @@ import com.hdcompany.admin.listener.IOnClickListener;
 import com.hdcompany.admin.model.Product;
 import com.hdcompany.admin.utility.Constant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -25,12 +27,16 @@ public class ProductRCVAdapter extends RecyclerView.Adapter<ProductRCVAdapter.Pr
     public static final int LOADING_ITEM = 0;
     public static final int PRODUCT_ITEM = 1;
 
-    private static List<Product> products;
+    private Activity activity;
+    private List<Product> products = new ArrayList<>();
     private IOnClickListener clickListener;
 
-    public ProductRCVAdapter(@NonNull List<Product> products, @Nonnull IOnClickListener listener) {
-        this.products = products;
+    public ProductRCVAdapter(@NonNull Activity activity, @Nonnull IOnClickListener listener) {
         clickListener = listener;
+        this.activity = activity;
+    }
+    public void setProducts(List<Product> items) {
+        products.addAll(items);
     }
 
     @NonNull

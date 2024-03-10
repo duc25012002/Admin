@@ -21,8 +21,12 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.hdcompany.admin.model.Product;
 import com.hdcompany.admin.model.User;
+import com.hdcompany.admin.utility.Constant;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -33,7 +37,11 @@ public class Auth {
     }
 
     public static FirebaseDatabase firebaseDatabase() {
-        return FirebaseDatabase.getInstance();
+        return FirebaseDatabase.getInstance(Constant.FIREBASE_URL);
+    }
+
+    public static Query databaseProductsReference(){
+        return firebaseDatabase().getReference("/products");
     }
 
     public static GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -114,5 +122,16 @@ public class Auth {
                 }
         );
         return firebaseAuth().getCurrentUser();
+    }
+
+    /*
+    Get product in a limited items
+     */
+
+    public static Query getLimitedProducts(String key){
+        if( key == null){
+            return databaseProductsReference().orderByKey().limitToFirst(20);
+        }
+        return databaseProductsReference().orderByKey().startAfter(key).limitToFirst(20);
     }
 }

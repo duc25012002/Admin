@@ -18,9 +18,10 @@
             android:id="@+id/search_and_chat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@drawable/menu_background"
             android:orientation="horizontal"
             android:weightSum="10"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -40,6 +41,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+
                 android:id="@+id/message"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -55,11 +57,13 @@
             android:id="@+id/shop_recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
+
             android:background="@color/bg_login_screen"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_and_chat"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
