@@ -18,6 +18,7 @@ import com.hdcompany.admin.MainActivity;
 import com.hdcompany.admin.databinding.ActivityRegisterBinding;
 import com.hdcompany.admin.firebase.Auth;
 import com.hdcompany.admin.model.User;
+import com.hdcompany.admin.utility.Utility;
 
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding registerBinding;
@@ -59,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
             CLICK TO SIGN UP
          */
         registerBinding.signupButton.setOnClickListener(v -> {
+            Utility.hideSoftKeyboard(this);
             try {
                 if (
                         !user.getUsername().equals("") && !user.getPassword().equals("")
@@ -168,10 +170,13 @@ public class RegisterActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     private void takeLoginPrimeAction(){
         this.startActivity(new Intent(this, PrimeActivity.class));
+        this.finish();
     }
     /*
         FORWARD TO SIGN OUT SCREEN

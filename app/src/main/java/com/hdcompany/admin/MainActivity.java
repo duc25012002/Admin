@@ -30,6 +30,7 @@ import com.hdcompany.admin.activity.SignOutActivity;
 import com.hdcompany.admin.databinding.LoginScreenBinding;
 import com.hdcompany.admin.firebase.Auth;
 import com.hdcompany.admin.model.User;
+import com.hdcompany.admin.utility.Utility;
 
 import io.grpc.TlsServerCredentials;
 
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         Login Button
          */
         loginScreenBinding.loginButton.setOnClickListener(v -> {
+            Utility.hideSoftKeyboard(this);
             try {
                 if (!user.getUsername().equals("") && !user.getPassword().equals("")) {
                     firebaseUser = Auth.loginAuth(this, user);
