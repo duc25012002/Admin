@@ -1,6 +1,7 @@
 package com.hdcompany.admin.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 
@@ -21,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.hdcompany.admin.MyApplication;
 import com.hdcompany.admin.R;
+import com.hdcompany.admin.activity.ProductDetailsActivity;
 import com.hdcompany.admin.adapter.ProductLoadStateRCVAdapter;
 import com.hdcompany.admin.adapter.ProductRCVAdapter;
 import com.hdcompany.admin.databinding.FragmentShopBinding;
@@ -104,6 +106,7 @@ public class ShopFragment extends Fragment {
         shopBinding.message.setOnClickListener(v->{
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show();
             Utility.hideSoftKeyboard(getActivity());
+
         });
 
         InitRecyclerViewAdapter();
@@ -163,11 +166,14 @@ public class ShopFragment extends Fragment {
         /*
         Set event click
          */
-        shopAdapter = new ProductRCVAdapter(getActivity(), new IOnClickListener() {
+        shopAdapter = new ProductRCVAdapter(new IOnClickListener() {
             @Override
             public void onClickItemProduct(Product product) {
                 Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show();
                 Utility.hideSoftKeyboard(getActivity());
+                Intent i = new Intent(getActivity(), ProductDetailsActivity.class);
+                i.putExtra("product",product);
+                getActivity().startActivity(i);
             }
         });
         /*

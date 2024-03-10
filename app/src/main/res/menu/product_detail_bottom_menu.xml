@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_chat_with_shop"
+        android:icon="@drawable/message_circle_chat_icon"
+        android:title="@string/chat_with_shop"
+        android:checked="true"/>
+    <item
+        android:id="@+id/nav_add_to_cart"
+        android:icon="@drawable/cart_not_select"
+        android:title="@string/add_cart" />
+
+</menu>

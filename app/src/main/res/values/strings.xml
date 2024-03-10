@@ -22,5 +22,19 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="shop">Shop</string>
     <string name="refresh">Refresh</string>
+    <string name="add_cart">Add to cart</string>
+    <string name="chat_with_shop">Chat Shop</string>
+    <string name="buy_now">Buy Now</string>
+    <string name="product_desc_test">Once upon a time, in a quaint village nestled between rolling hills and lush forests, there lived a young and adventurous soul named Lucas. Lucas was known throughout the village for his insatiable curiosity and his love for exploring the world around him. From a young age, he would wander into the woods, climb the tallest trees, and gaze up at the stars, dreaming of the adventures that awaited him beyond the horizon.\n\nAs Lucas grew older, his thirst for exploration only intensified. He would spend hours poring over maps, studying ancient legends, and listening to the tales of travelers who passed through the village. But despite his longing to venture into the unknown, Lucas remained tethered to the village by his responsibilities to his family and community.\n\nOne day, while exploring the outskirts of the village, Lucas stumbled upon a hidden cave concealed behind a curtain of ivy. Intrigued by the mystery of the cave, Lucas summoned the courage to venture inside. The cave was dark and damp, with shadows dancing along the walls, but Lucas pressed on, guided by the light of his lantern.\n\nDeep within the cavern, Lucas discovered a treasure trove of ancient artifacts and relics, relics that spoke of a long-forgotten civilization that had once thrived in the land. As he marveled at the wonders around him, Lucas felt a sense of awe and wonder unlike anything he had ever experienced before.\n\nDetermined to uncover the secrets of the ancient civilization, Lucas embarked on a journey that would take him to the farthest reaches of the realm. Along the way, he encountered mystical creatures, battled fierce adversaries, and forged lifelong friendships with fellow adventurers who shared his thirst for discovery.\n\nAs he delved deeper into the mysteries of the past, Lucas uncovered ancient prophecies and lost knowledge that would shape the destiny of the realm. With each new discovery, he grew wiser and more determined to fulfill his destiny as a guardian of the ancient world.\n\nIn the end, Lucas emerged from his journey not only as a hero but as a symbol of hope and inspiration to all who knew him. And though his adventures had taken him far from the village where he was born, Lucas knew that his true home would always be in the hearts of those who loved him.\n\nAnd so, with his head held high and his spirit ablaze with the fire of adventure, Lucas set out once more into the great unknown, ready to face whatever challenges lay ahead on his never-ending quest for knowledge and discovery.</string>
+    <string name="you_may_interest">End</string>
+    <string name="product_descriptions">Product Descriptions</string>
+    <string name="take_a_look">Take a look</string>
+    <string name="bac_giang_city">Bac Giang City</string>
+    <string name="kienbesirius">KIENBESIRIUS</string>
+    <string name="_4_5_5_stars_20_reviews">4.5/5 stars (20 reviews)</string>
+    <string name="product_reviews">Product reviews</string>
+    <string name="r_u_t_k_ch_r_u_cf_h_a_ti_t_hoa_h_ng_tr_ng_ch_t_li_u_th_p">Rìu đột kích, Rìu CF Họa tiết Hoa Hồng Trắng Chất Liệu Thép</string>
+    <string name="_999_sold">999 sold</string>
+    <string name="_99999999_vnd">99999999 vnd</string>
 
 </resources>

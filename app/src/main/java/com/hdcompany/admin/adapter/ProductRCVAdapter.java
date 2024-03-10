@@ -27,13 +27,11 @@ public class ProductRCVAdapter extends RecyclerView.Adapter<ProductRCVAdapter.Pr
     public static final int LOADING_ITEM = 0;
     public static final int PRODUCT_ITEM = 1;
 
-    private Activity activity;
     private List<Product> products = new ArrayList<>();
     private IOnClickListener clickListener;
 
-    public ProductRCVAdapter(@NonNull Activity activity, @Nonnull IOnClickListener listener) {
+    public ProductRCVAdapter(@Nonnull IOnClickListener listener) {
         clickListener = listener;
-        this.activity = activity;
     }
     public void setProducts(List<Product> items) {
         products.addAll(items);
@@ -57,7 +55,6 @@ public class ProductRCVAdapter extends RecyclerView.Adapter<ProductRCVAdapter.Pr
             System.out.println("CHECKNULL"+product.getName());
         }
         if(product != null){
-            holder.productItemRcvBinding.setProduct(product);
             String link_img = "https://konachan.com/image/b909ff85dd5558140ff05798e0e4eecc/Konachan.com%20-%20373493%20boat%20braids%20dark%20dragon%20dress%20fire%20leo-dont-want-to-be-a-painter%20long_hair%20original%20ponytail%20sword%20tattoo%20water%20weapon.jpg";
             Glide.with(holder.productItemRcvBinding.imageViewProduct).load(link_img).into(holder.productItemRcvBinding.imageViewProduct);
             holder.productItemRcvBinding.textViewUnitPrice.setText(product.getUnit_price() + Constant.CURRENCY);
