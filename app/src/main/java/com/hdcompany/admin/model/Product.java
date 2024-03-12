@@ -23,6 +23,20 @@ public class Product extends BaseObservable implements Serializable {
 
     private List<String> images;
 
+    public Product() {
+    }
+
+    public Product(String product_id, String name, String description, double unit_price, int sold_quantity, int quantity_in_stock, String seller, String seller_address, List<String> images) {
+        this.product_id = product_id;
+        this.name = name;
+        this.description = description;
+        this.unit_price = unit_price;
+        this.sold_quantity = sold_quantity;
+        this.quantity_in_stock = quantity_in_stock;
+        this.seller = seller;
+        this.seller_address = seller_address;
+        this.images = images;
+    }
 
     @Bindable
     public String getProduct_id() {

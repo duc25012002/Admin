@@ -36,5 +36,7 @@
     <string name="r_u_t_k_ch_r_u_cf_h_a_ti_t_hoa_h_ng_tr_ng_ch_t_li_u_th_p">Rìu đột kích, Rìu CF Họa tiết Hoa Hồng Trắng Chất Liệu Thép</string>
     <string name="_999_sold">999 sold</string>
     <string name="_99999999_vnd">99999999 vnd</string>
+    <string name="to_admin">To Admin</string>
+    <string name="admin_accessed">Admin accessed!</string>
 
 </resources>

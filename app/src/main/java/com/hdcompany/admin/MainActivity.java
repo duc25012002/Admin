@@ -4,35 +4,25 @@ package com.hdcompany.admin;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 
 
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hdcompany.admin.activity.PrimeActivity;
 import com.hdcompany.admin.activity.RegisterActivity;
-import com.hdcompany.admin.activity.SignOutActivity;
 import com.hdcompany.admin.databinding.LoginScreenBinding;
 import com.hdcompany.admin.firebase.Auth;
 import com.hdcompany.admin.model.User;
 import com.hdcompany.admin.utility.Utility;
-
-import io.grpc.TlsServerCredentials;
 
 public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient client;
@@ -131,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseUser = Auth.firebaseAuthen(account.getIdToken());
+                firebaseUser = Auth.firebaseAuthen(account.getIdToken(),this);
                 firebaseUser = Auth.firebaseAuth().getCurrentUser();
                 /*
                 Forward to the next screen. Logout
@@ -143,38 +133,6 @@ public class MainActivity extends AppCompatActivity {
         // End the task, and got the user
         forwardPrime();
     }
-
-    /*
-    FORWARD TO LOGOUT
-     */
-    private void forwardScreen() {
-        try {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        do {
-                            firebaseUser = Auth.firebaseAuth().getCurrentUser();
-                        } while (firebaseUser == null);
-                        String email = firebaseUser.getEmail();
-                        for (int i = 0; i < 10; i++) {
-                            System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email);
-                        }
-                        takeLoginAction();
-                    } catch (Exception e) {
-                        for (int i = 0; i < 10; i++) {
-                            System.out.println("LOGIN ERROR");
-                        }
-                        e.printStackTrace();
-                        Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }, 3000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void forwardPrime(){
         try {
             new Handler().postDelayed(new Runnable() {
@@ -207,15 +165,6 @@ public class MainActivity extends AppCompatActivity {
     private void takeLoginPrimeAction(){
         this.startActivity(new Intent(this, PrimeActivity.class));
     }
-    /*
-    FORWARD TO LOGOUT
-     */
-    private void takeLoginAction() {
-        Intent i = new Intent(this, SignOutActivity.class);
-        this.startActivity(i);
-        this.finish();
-    }
-
     /*
     FORWARD TO SIGN UP
      */

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:id="@+id/item_product"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:cardCornerRadius="4dp"
-        android:background="#fefae0"
+        android:background="@color/bg_login_screen"
+        android:backgroundTint="@color/bg_login_screen"
         app:cardElevation="4dp">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -50,20 +51,22 @@
 
                 <TextView
                     android:id="@+id/textViewNameProduct"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:background="#DD03DAC6"
                     android:paddingStart="8dp"
                     android:paddingTop="4dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="4dp"
                     android:textColor="@color/white"
+                    app:layout_constraintBottom_toTopOf="@+id/textViewUnitPrice"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/textViewUnitPrice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|bottom"
                     android:background="#DD03DAC6"
@@ -72,8 +75,17 @@
                     android:paddingEnd="8dp"
                     android:paddingBottom="4dp"
                     android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/view_space"
+                    app:layout_constraintStart_toStartOf="parent" />
+                <View
+                    android:id="@+id/view_space"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="#014f86"
+                    app:layout_constraintTop_toBottomOf="@id/textViewNameProduct"
+                    app:layout_constraintEnd_toStartOf="@id/textViewSoldProduct"
+                    app:layout_constraintBottom_toBottomOf="@id/textViewUnitPrice"/>
 
                 <TextView
                     android:id="@+id/textViewSoldProduct"
@@ -87,7 +99,8 @@
                     android:paddingBottom="4dp"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textViewUnitPrice" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

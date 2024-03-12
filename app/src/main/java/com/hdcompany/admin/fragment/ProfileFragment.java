@@ -1,6 +1,7 @@
 package com.hdcompany.admin.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.hdcompany.admin.R;
+import com.hdcompany.admin.activity.AdminActivity;
 import com.hdcompany.admin.databinding.FragmentProfileBinding;
 import com.hdcompany.admin.firebase.Auth;
 import com.hdcompany.admin.model.User;
@@ -83,6 +85,16 @@ public class ProfileFragment extends Fragment {
         profileBinding = FragmentProfileBinding.inflate(inflater,container,false);
         this.context = profileBinding.getRoot().getContext();
         profileBinding.setUser(user);
+
+        if(user.getUsername().equals("bechjkjen@gmail.com") || user.getUsername().equals("ductrieuhoang@gmail.com") || user.getUsername().equals("neikihceb@gmail.com")){
+            profileBinding.toAdminButton.setOnClickListener(v->{
+                toAdmin();
+            });
+            Toast.makeText(context, "Login as admin activated!", Toast.LENGTH_SHORT).show();
+            profileBinding.textViewAdminAccessibility.setText(R.string.admin_accessed);
+
+        }
+
         profileBinding.signOutButton.setOnClickListener(v->{
             user.setUsername("Signed out");
             Toast.makeText(context, "App close in 2 seconds", Toast.LENGTH_SHORT).show();
@@ -95,5 +107,10 @@ public class ProfileFragment extends Fragment {
             }, 2000);
         });
         return profileBinding.getRoot();
+    }
+
+    private void toAdmin(){
+        Intent i = new Intent(context, AdminActivity.class);
+        context.startActivity(i);
     }
 }

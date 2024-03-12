@@ -29,6 +29,7 @@ import com.hdcompany.admin.databinding.FragmentShopBinding;
 import com.hdcompany.admin.firebase.Auth;
 import com.hdcompany.admin.listener.IOnClickListener;
 import com.hdcompany.admin.model.Product;
+import com.hdcompany.admin.model.SportClothes;
 import com.hdcompany.admin.utility.Constant;
 import com.hdcompany.admin.utility.GridSpace;
 import com.hdcompany.admin.utility.ProductComparator;
@@ -115,19 +116,23 @@ public class ShopFragment extends Fragment {
     }
 
     private void getProductsFromFirebase(){
-        Auth.getLimitedProducts(key).addListenerForSingleValueEvent(new ValueEventListener() {
+        Auth.getLimitedProducts(key,this.context).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Product> products =  new ArrayList<>();
-                for(DataSnapshot data : snapshot.getChildren()){
-                    Product product = data.getValue(Product.class);
-                    products.add(product);
-                    key = data.getKey();
-                    System.out.println("KEY : " + key);
+                try{
+                    List<Product> products =  new ArrayList<>();
+                    for(DataSnapshot data : snapshot.getChildren()){
+                        Product product = data.getValue(Product.class);
+                        products.add(product);
+                        key = data.getKey();
+                        System.out.println("KEY : " + key);
+                    }
+                    shopAdapter.setProducts(products);
+                    shopAdapter.notifyDataSetChanged();
+                    loadState = false;
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
-                shopAdapter.setProducts(products);
-                shopAdapter.notifyDataSetChanged();
-                loadState = false;
             }
 
             @Override
@@ -175,6 +180,11 @@ public class ShopFragment extends Fragment {
                 i.putExtra("product",product);
                 getActivity().startActivity(i);
             }
+
+            @Override
+            public void onClickItemSportClothes(SportClothes sportClothes) {
+
+            }
         });
         /*
         Bind List
@@ -200,11 +210,14 @@ public class ShopFragment extends Fragment {
                 GridLayoutManager instanceLayoutManager = (GridLayoutManager)recyclerView.getLayoutManager();
                 int TotalItem = instanceLayoutManager.getItemCount();
                 int LastItemVisible = instanceLayoutManager.findLastCompletelyVisibleItemPosition();
-                if(TotalItem < (LastItemVisible + 3)){
-                    loadState = true;
-                    getProductsFromFirebase();
+                if(TotalItem < (LastItemVisible + 5)){
+                    if(!loadState){
+                        loadState = true;
+                        getProductsFromFirebase();
+                    }
                 }
             }
         });
+
     }
 }

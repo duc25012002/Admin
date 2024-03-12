@@ -3,6 +3,7 @@ package com.hdcompany.admin.firebase;
 
 import android.app.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
@@ -24,8 +25,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.hdcompany.admin.MyApplication;
 import com.hdcompany.admin.model.Product;
 import com.hdcompany.admin.model.User;
+import com.hdcompany.admin.utility.AdminJsonConfig;
 import com.hdcompany.admin.utility.Constant;
 
 import java.util.HashMap;
@@ -36,22 +39,38 @@ public class Auth {
         return FirebaseAuth.getInstance();
     }
 
-    public static FirebaseDatabase firebaseDatabase() {
-        return FirebaseDatabase.getInstance(Constant.FIREBASE_URL);
+    public static FirebaseDatabase adminDatabase(Context context) {
+        return MyApplication.get(context).getAdminDatabase();
     }
 
-    public static Query databaseProductsReference(){
-        return firebaseDatabase().getReference("/products");
+    public static FirebaseDatabase sportClothsDatabase(Context context) {
+        return MyApplication.get(context).getSportClothsDatabase();
+    }
+
+    public static Query adminDBProductsReference(Context context) {
+        return adminDatabase(context).getReference("/products");
+    }
+
+    public static Query sportClothsDBSportsReference(Context context) {
+        return sportClothsDatabase(context).getReference("/sports");
+    }
+
+    public static Query sportClothsDBBookingReference(Context context) {
+        return sportClothsDatabase(context).getReference("/booking");
+    }
+
+    public static Query sportClothsDBFeedbackReference(Context context) {
+        return sportClothsDatabase(context).getReference("/feedback");
     }
 
     public static GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("994449845746-jk1r9sem3313o2o07nqp86t9ookcq9kv.apps.googleusercontent.com")
+            .requestIdToken(AdminJsonConfig.OTHER_PLATFORM_OAUTH_CLIENT)
             .requestEmail().build();
 
     /*
     AUTHENTICATE FOR GOOGLE SIGN IN
      */
-    public static FirebaseUser firebaseAuthen(String idToken) {
+    public static FirebaseUser firebaseAuthen(String idToken, Context context) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         String username = "ERROR";
         firebaseAuth().signInWithCredential(credential).addOnCompleteListener(
@@ -64,7 +83,7 @@ public class Auth {
                         map.put("id", user.getUid());
                         map.put("name", user.getDisplayName());
                         map.put("profile", Objects.requireNonNull(user.getPhotoUrl()).toString());
-                        firebaseDatabase().getReference().child("users").child(user.getUid()).setValue(map);
+                        adminDatabase(context).getReference().child("users").child(user.getUid()).setValue(map);
                     }
                 }
         );
@@ -128,10 +147,16 @@ public class Auth {
     Get product in a limited items
      */
 
-    public static Query getLimitedProducts(String key){
-        if( key == null){
-            return databaseProductsReference().orderByKey().limitToFirst(20);
+    public static Query getLimitedProducts(String key,Context context) {
+        if (key == null) {
+            return adminDBProductsReference(context).orderByKey().limitToFirst(20);
         }
-        return databaseProductsReference().orderByKey().startAfter(key).limitToFirst(20);
+        return adminDBProductsReference(context).orderByKey().startAfter(key).limitToFirst(20);
+    }
+    public static Query getLimitedSportClothes(String key,Context context) {
+        if (key == null) {
+            return sportClothsDBSportsReference(context).orderByKey().limitToFirst(20);
+        }
+        return sportClothsDBSportsReference(context).orderByKey().startAfter(key).limitToFirst(20);
     }
 }

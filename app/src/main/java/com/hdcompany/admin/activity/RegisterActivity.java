@@ -101,7 +101,7 @@ public class RegisterActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseUser = Auth.firebaseAuthen(account.getIdToken());
+                firebaseUser = Auth.firebaseAuthen(account.getIdToken(),this);
                 firebaseUser = Auth.firebaseAuth().getCurrentUser();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -110,39 +110,6 @@ public class RegisterActivity extends AppCompatActivity {
         forwardPrime();
     }
 
-
-    /*
-        FORWARD SCREEN TO SIGN OUT SCREEN
-     */
-    private void forwardScreen() {
-        try {
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        do {
-                            firebaseUser = Auth.firebaseAuth().getCurrentUser();
-                        }
-                        while (firebaseUser == null);
-                        String email = firebaseUser.getEmail();
-                        for (int i = 0; i < 10; i++) {
-                            System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email);
-                        }
-                        takeLoginAction();
-                    } catch (Exception e) {
-                        for (int i = 0; i < 10; i++) {
-                            System.out.println("LOGIN ERROR");
-                        }
-                        e.printStackTrace();
-                        Toast.makeText(RegisterActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }, 3000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     private void forwardPrime(){
         try {
             new Handler().postDelayed(new Runnable() {
@@ -178,15 +145,6 @@ public class RegisterActivity extends AppCompatActivity {
         this.startActivity(new Intent(this, PrimeActivity.class));
         this.finish();
     }
-    /*
-        FORWARD TO SIGN OUT SCREEN
-     */
-    private void takeLoginAction() {
-        Intent i = new Intent(this, SignOutActivity.class);
-        this.startActivity(i);
-        this.finish();
-    }
-
     /*
         FORWARD TO LOGIN
      */

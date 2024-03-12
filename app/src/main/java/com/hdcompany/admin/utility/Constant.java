@@ -4,6 +4,10 @@ package com.hdcompany.admin.utility;
 public interface Constant {
 
     String GENERIC_ERROR = "FATAL ERROR";
+
+    /*
+    ADMIN URL
+     */
     String FIREBASE_URL = "https://admin-030724-default-rtdb.firebaseio.com/";
 
     String CURRENCY = " VND ";

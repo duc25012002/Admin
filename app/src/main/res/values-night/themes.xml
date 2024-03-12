@@ -4,6 +4,6 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="windowNoTitle">true</item>
-        <item name="fontFamily">@font/league_mono_regular</item>
+        <item name="fontFamily">@font/inter_regular</item>
     </style>
 </resources>

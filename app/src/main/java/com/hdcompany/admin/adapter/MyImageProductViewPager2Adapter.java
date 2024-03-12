@@ -38,7 +38,7 @@ public class MyImageProductViewPager2Adapter extends RecyclerView.Adapter<MyImag
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderer holder, int position) {
-        Glide.with(context).load(imagePaths.get(position)).into(holder.binding.imageViewProduct);
+        Glide.with(context).load(imagePaths.get(position)).into(holder.binding.imageViewSportClothes);
         holder.binding.totalImage.setText(String.valueOf(totalImage));
         currentImage = position + 1;
         holder.binding.currentImageNumber.setText(String.valueOf(currentImage));
