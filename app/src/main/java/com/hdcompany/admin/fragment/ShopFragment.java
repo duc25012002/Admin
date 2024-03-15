@@ -2,7 +2,7 @@ package com.hdcompany.admin.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,35 +10,28 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
-import com.bumptech.glide.RequestManager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.hdcompany.admin.MyApplication;
 import com.hdcompany.admin.R;
+import com.hdcompany.admin.activity.PrimeActivity;
 import com.hdcompany.admin.activity.ProductDetailsActivity;
-import com.hdcompany.admin.adapter.ProductLoadStateRCVAdapter;
-import com.hdcompany.admin.adapter.ProductRCVAdapter;
 import com.hdcompany.admin.databinding.FragmentShopBinding;
 import com.hdcompany.admin.firebase.Auth;
 import com.hdcompany.admin.listener.IOnClickListener;
-import com.hdcompany.admin.model.Product;
 import com.hdcompany.admin.model.SportClothes;
-import com.hdcompany.admin.utility.Constant;
 import com.hdcompany.admin.utility.GridSpace;
-import com.hdcompany.admin.utility.ProductComparator;
+
 import com.hdcompany.admin.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -90,7 +83,6 @@ public class ShopFragment extends Fragment {
 
     private FragmentShopBinding shopBinding;
     private Context context;
-    private ProductRCVAdapter shopAdapter;
     /*
     Key for limited loading data
      */
@@ -104,120 +96,77 @@ public class ShopFragment extends Fragment {
         shopBinding = FragmentShopBinding.inflate(inflater,container,false);
         this.context = shopBinding.getRoot().getContext();
 
-        shopBinding.message.setOnClickListener(v->{
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show();
-            Utility.hideSoftKeyboard(getActivity());
-
-        });
-
-        InitRecyclerViewAdapter();
-        getProductsFromFirebase();
-        return shopBinding.getRoot();
-    }
-
-    private void getProductsFromFirebase(){
-        Auth.getLimitedProducts(key,this.context).addListenerForSingleValueEvent(new ValueEventListener() {
+        shopBinding.toSportsManager.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onClick(View v) {
                 try{
-                    List<Product> products =  new ArrayList<>();
-                    for(DataSnapshot data : snapshot.getChildren()){
-                        Product product = data.getValue(Product.class);
-                        products.add(product);
-                        key = data.getKey();
-                        System.out.println("KEY : " + key);
-                    }
-                    shopAdapter.setProducts(products);
-                    shopAdapter.notifyDataSetChanged();
-                    loadState = false;
-                }catch(Exception e){
+                    shopBinding.toSportsManager.setBackgroundResource(R.drawable.menu_background);
+                    shopBinding.toSportsManager.setTextColor(Color.WHITE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            shopBinding.toSportsManager.setBackgroundResource(R.color.white);
+                            shopBinding.toSportsManager.setTextColor(Color.BLACK);
+                            if(getActivity() != null){
+                                ((PrimeActivity) getActivity()).navigateFragments(3);
+                            }
+                        }
+                    },80);
+
+                }catch (Exception e){
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-//        MyApplication.get(this.context).getProductsDBRef().addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//                for(DataSnapshot dataSnapshot :snapshot.getChildren()){
-//                    Product product = dataSnapshot.getValue(Product.class);
-//                    if(product == null)return;
-//                    products.add(0,product);
-//                    System.out.println("ProductName: " + product.getName());
-//                }
-//                InitRecyclerViewAdapter();
-//                shopAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Toast.makeText(context, Constant.GENERIC_ERROR, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-    }
 
-    private void InitRecyclerViewAdapter(){
-        /*
-        Setting recyclerView
-         */
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this.context,2);
-        shopBinding.shopRecyclerView.setLayoutManager(gridLayoutManager);
-        shopBinding.shopRecyclerView.addItemDecoration(new GridSpace(2,20,true));
-        /*
-        Set event click
-         */
-        shopAdapter = new ProductRCVAdapter(new IOnClickListener() {
+        shopBinding.toFeedBackManager.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClickItemProduct(Product product) {
-                Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show();
-                Utility.hideSoftKeyboard(getActivity());
-                Intent i = new Intent(getActivity(), ProductDetailsActivity.class);
-                i.putExtra("product",product);
-                getActivity().startActivity(i);
-            }
+            public void onClick(View v) {
+                try{
+                    shopBinding.toFeedBackManager.setBackgroundResource(R.drawable.menu_background);
+                    shopBinding.toFeedBackManager.setTextColor(Color.WHITE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            shopBinding.toFeedBackManager.setBackgroundResource(R.color.white);
+                            shopBinding.toFeedBackManager.setTextColor(Color.BLACK);
+                            if(getActivity() != null){
+                                ((PrimeActivity) getActivity()).navigateFragments(2);
+                            }
+                        }
+                    },80);
 
-            @Override
-            public void onClickItemSportClothes(SportClothes sportClothes) {
-
-            }
-        });
-        /*
-        Bind List
-         */
-        shopBinding.shopRecyclerView.setAdapter(shopAdapter);
-        /*
-        Adding spacing between item in list
-         */
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return shopAdapter.getItemViewType(position) == ProductRCVAdapter.LOADING_ITEM?1:2;
-            }
-        });
-
-        /*
-        Loading state wile scrolling
-         */
-        shopBinding.shopRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                GridLayoutManager instanceLayoutManager = (GridLayoutManager)recyclerView.getLayoutManager();
-                int TotalItem = instanceLayoutManager.getItemCount();
-                int LastItemVisible = instanceLayoutManager.findLastCompletelyVisibleItemPosition();
-                if(TotalItem < (LastItemVisible + 5)){
-                    if(!loadState){
-                        loadState = true;
-                        getProductsFromFirebase();
-                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
+
             }
         });
 
+        shopBinding.toBookingManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    shopBinding.toBookingManager.setBackgroundResource(R.drawable.menu_background);
+                    shopBinding.toBookingManager.setTextColor(Color.WHITE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            shopBinding.toBookingManager.setBackgroundResource(R.color.white);
+                            shopBinding.toBookingManager.setTextColor(Color.BLACK);
+                            if(getActivity() != null){
+                                ((PrimeActivity) getActivity()).navigateFragments(1);
+                            }
+                        }
+                    },80);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        return shopBinding.getRoot();
     }
 }

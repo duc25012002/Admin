@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class SportClothes extends BaseObservable implements Serializable {
-    private int id;
+    private String id;
     private String name;
     private String image;
 
@@ -25,7 +25,7 @@ public class SportClothes extends BaseObservable implements Serializable {
     public SportClothes() {
     }
 
-    public SportClothes(int id, String name, String image, String banner, String description, int price, int sale, int count, int totalPrice, boolean popular, List<Image> images) {
+    public SportClothes(String id, String name, String image, String banner, String description, int price, int sale, int count, int totalPrice, boolean popular, List<Image> images) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -50,11 +50,11 @@ public class SportClothes extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
         notifyPropertyChanged(BR.id);
     }
@@ -151,7 +151,7 @@ public class SportClothes extends BaseObservable implements Serializable {
 
     @Override
     public String toString() {
-        return "SportClothes{" +
+        return "TOSTRING: SportClothes{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", image='" + image + '\'' +
@@ -162,6 +162,6 @@ public class SportClothes extends BaseObservable implements Serializable {
                 ", totalPrice=" + totalPrice +
                 ", popular=" + popular +
                 ", images=" + images +
-                '}';
+                '}' + " END TOSTRING";
     }
 }

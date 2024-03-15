@@ -23,11 +23,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class SportClothesListAdapter extends RecyclerView.Adapter<SportClothesListAdapter.SportClothesViewHolder> {
-    public static final int LOADING_ITEM = 0;
-    public static final int PRODUCT_ITEM = 1;
-
-    private boolean is_trash_can = false;
-
     private List<SportClothes> sportClothesList = new ArrayList<>();
     private IOnClickListener clickListener;
 
@@ -66,17 +61,8 @@ public class SportClothesListAdapter extends RecyclerView.Adapter<SportClothesLi
         holder.binding.textViewSaleSportClothes.setText(product.getSale() + "% Sale");
         holder.binding.textViewNameSportClothes.setText(product.getName());
         holder.binding.itemSport.setOnClickListener(v->this.clickListener.onClickItemSportClothes(product));
-        if(is_trash_can){
-            holder.binding.trashCan.setVisibility(View.VISIBLE);
-        }else{
-            holder.binding.trashCan.setVisibility(View.GONE);
-        }
-    }
 
-    public void setTrashCan(boolean visible){
-        this.is_trash_can = visible;
     }
-
     @Override
     public int getItemCount() {
         return sportClothesList == null ? 0: sportClothesList.size();

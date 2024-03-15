@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "994449845746",
-    "firebase_url": "https://admin-030724-default-rtdb.firebaseio.com",
-    "project_id": "admin-030724",
-    "storage_bucket": "admin-030724.appspot.com"
+    "project_number": "733918042178",
+    "firebase_url": "https://serene-flare-367716-default-rtdb.firebaseio.com",
+    "project_id": "serene-flare-367716",
+    "storage_bucket": "serene-flare-367716.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:994449845746:android:ffea78ba54f6f4b13bcf6b",
+        "mobilesdk_app_id": "1:733918042178:android:acc0a67a85a22e8c2275db",
         "android_client_info": {
-          "package_name": "com.hdcompany.admin"
+          "package_name": "com.example.sportclothes"
         }
       },
       "oauth_client": [
         {
-          "client_id": "994449845746-9oh48i0ghef8g8dm2f9k43m6qqiijsr2.apps.googleusercontent.com",
+          "client_id": "733918042178-dv357v022bqmkh664kerqhgs1bfu69i3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.hdcompany.admin",
-            "certificate_hash": "00cb0606d6fcd5474aa8e1c775ba01afc10a1ce2"
+            "package_name": "com.example.sportclothes",
+            "certificate_hash": "e3cea50b11d1b45c06316af205817d90b8ae0d22"
           }
         },
         {
-          "client_id": "994449845746-jk1r9sem3313o2o07nqp86t9ookcq9kv.apps.googleusercontent.com",
+          "client_id": "733918042178-o95c5366u9efjhmdd0jgr4i19vshd2ua.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDGM5vAaToFxPfvQV4W8gJWvqkjzg9EeU4"
+          "current_key": "AIzaSyBIQB8OlMeYgb1nOakh_G6jUi1nPGOBD7I"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "994449845746-jk1r9sem3313o2o07nqp86t9ookcq9kv.apps.googleusercontent.com",
+              "client_id": "733918042178-2qdrtqsa4kkoslcqbgebgg28grcamkht.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -45,14 +45,59 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:733918042178:android:9dcf5e9767a2caa42275db",
+        "mobilesdk_app_id": "1:733918042178:android:dd0d00d1fabf0d1f2275db",
         "android_client_info": {
           "package_name": "com.hdcompany.admin"
         }
       },
       "oauth_client": [
         {
-          "client_id": "733918042178-2qdrtqsa4kkoslcqbgebgg28grcamkht.apps.googleusercontent.com",
+          "client_id": "733918042178-qqllohaq0lpp2ulkm3a0l89j3lp6usld.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hdcompany.admin",
+            "certificate_hash": "00cb0606d6fcd5474aa8e1c775ba01afc10a1ce2"
+          }
+        },
+        {
+          "client_id": "733918042178-o95c5366u9efjhmdd0jgr4i19vshd2ua.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIQB8OlMeYgb1nOakh_G6jUi1nPGOBD7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733918042178-2qdrtqsa4kkoslcqbgebgg28grcamkht.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733918042178:android:87adf2c4fd0d6fd32275db",
+        "android_client_info": {
+          "package_name": "com.hdcompany.plpsa832"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733918042178-8n5k6a9oqst92jia58sf7u0idr1aep8h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hdcompany.plpsa832",
+            "certificate_hash": "f3aeb9d128d245b489ebdb3e2ff6a7b5f3591106"
+          }
+        },
+        {
+          "client_id": "733918042178-o95c5366u9efjhmdd0jgr4i19vshd2ua.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

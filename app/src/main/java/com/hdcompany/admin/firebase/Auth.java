@@ -4,15 +4,11 @@ package com.hdcompany.admin.firebase;
 import android.app.Activity;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,14 +18,14 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.storage.FirebaseStorage;
 import com.hdcompany.admin.MyApplication;
-import com.hdcompany.admin.model.Product;
 import com.hdcompany.admin.model.User;
-import com.hdcompany.admin.utility.AdminJsonConfig;
-import com.hdcompany.admin.utility.Constant;
+import com.hdcompany.admin.utility.SportClothJsonConfig;
+
+import org.checkerframework.checker.units.qual.N;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -38,62 +34,28 @@ public class Auth {
     public static FirebaseAuth firebaseAuth() {
         return FirebaseAuth.getInstance();
     }
-
-    public static FirebaseDatabase adminDatabase(Context context) {
-        return MyApplication.get(context).getAdminDatabase();
+    public static FirebaseStorage sportClothesFireStorage(Context context){
+        return MyApplication.get(context).getSportClothsFirebaseStorage();
     }
-
     public static FirebaseDatabase sportClothsDatabase(Context context) {
         return MyApplication.get(context).getSportClothsDatabase();
     }
 
-    public static Query adminDBProductsReference(Context context) {
-        return adminDatabase(context).getReference("/products");
-    }
-
-    public static Query sportClothsDBSportsReference(Context context) {
+    public static Query sportClothsDBSportsReferenceQuery(@NonNull Context context) {
         return sportClothsDatabase(context).getReference("/sports");
     }
 
-    public static Query sportClothsDBBookingReference(Context context) {
+    public static Query sportClothsDBBookingReferenceQuery(@NonNull Context context) {
         return sportClothsDatabase(context).getReference("/booking");
     }
 
-    public static Query sportClothsDBFeedbackReference(Context context) {
+    public static Query sportClothsDBFeedbackReferenceQuery(@NonNull Context context) {
         return sportClothsDatabase(context).getReference("/feedback");
     }
-
-    public static GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(AdminJsonConfig.OTHER_PLATFORM_OAUTH_CLIENT)
-            .requestEmail().build();
-
-    /*
-    AUTHENTICATE FOR GOOGLE SIGN IN
-     */
-    public static FirebaseUser firebaseAuthen(String idToken, Context context) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        String username = "ERROR";
-        firebaseAuth().signInWithCredential(credential).addOnCompleteListener(
-                new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        FirebaseUser user = firebaseAuth().getCurrentUser();
-                        HashMap<String, Object> map = new HashMap<>();
-                        assert user != null;
-                        map.put("id", user.getUid());
-                        map.put("name", user.getDisplayName());
-                        map.put("profile", Objects.requireNonNull(user.getPhotoUrl()).toString());
-                        adminDatabase(context).getReference().child("users").child(user.getUid()).setValue(map);
-                    }
-                }
-        );
-        return firebaseAuth().getCurrentUser();
-    }
-
     /*
     LOGIN USE EMAIL AND PASSWORD
      */
-    public static FirebaseUser loginAuth(Activity activity, User user) {
+    public static FirebaseUser loginAuth(@NonNull Activity activity, User user) {
         firebaseAuth().signInWithEmailAndPassword(user.getUsername().trim(), user.getPassword().trim()).addOnCompleteListener(
                 activity,
                 task -> {
@@ -117,7 +79,7 @@ public class Auth {
     /*
     SIGN UP USE EMAIL AND PASSWORD
      */
-    public static FirebaseUser signUpAuth(Activity activity, User user) {
+    public static FirebaseUser signUpAuth(@NonNull Activity activity, User user) {
         firebaseAuth().createUserWithEmailAndPassword(user.getUsername().trim(), user.getPassword().trim()).addOnCompleteListener(
                 task -> {
                     if (task.isSuccessful()) {
@@ -146,17 +108,23 @@ public class Auth {
     /*
     Get product in a limited items
      */
-
-    public static Query getLimitedProducts(String key,Context context) {
+    public static Query getLimitedSportClothes(String key, @NonNull Context context) {
         if (key == null) {
-            return adminDBProductsReference(context).orderByKey().limitToFirst(20);
+            return sportClothsDBSportsReferenceQuery(context).orderByKey().limitToFirst(20);
         }
-        return adminDBProductsReference(context).orderByKey().startAfter(key).limitToFirst(20);
+        return sportClothsDBSportsReferenceQuery(context).orderByKey().startAfter(key).limitToFirst(20);
     }
-    public static Query getLimitedSportClothes(String key,Context context) {
+    public static Query getLimitedFeedbackClothes(String key, @NonNull Context context) {
         if (key == null) {
-            return sportClothsDBSportsReference(context).orderByKey().limitToFirst(20);
+            return sportClothsDBFeedbackReferenceQuery(context).orderByKey().limitToFirst(20);
         }
-        return sportClothsDBSportsReference(context).orderByKey().startAfter(key).limitToFirst(20);
+        return sportClothsDBFeedbackReferenceQuery(context).orderByKey().startAfter(key).limitToFirst(20);
+    }
+
+    public static Query getLimitedBookingClothes(String key, @NonNull Context context) {
+        if (key == null) {
+            return sportClothsDBBookingReferenceQuery(context).orderByKey().limitToFirst(20);
+        }
+        return sportClothsDBBookingReferenceQuery(context).orderByKey().startAfter(key).limitToFirst(20);
     }
 }

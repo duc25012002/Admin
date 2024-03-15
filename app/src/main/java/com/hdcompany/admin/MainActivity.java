@@ -1,22 +1,36 @@
 package com.hdcompany.admin;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 
+import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.identity.BeginSignInResult;
+import com.google.android.gms.auth.api.identity.Identity;
+import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.hdcompany.admin.activity.PrimeActivity;
 import com.hdcompany.admin.activity.RegisterActivity;
 import com.hdcompany.admin.databinding.LoginScreenBinding;
@@ -24,13 +38,17 @@ import com.hdcompany.admin.firebase.Auth;
 import com.hdcompany.admin.model.User;
 import com.hdcompany.admin.utility.Utility;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
-    private GoogleSignInClient client;
-    private static final int RC_SIGN_IN = 20;
     private LoginScreenBinding loginScreenBinding;
     private User user;
-
     private FirebaseUser firebaseUser;
+
+    private SignInClient oneTapClient;
+    private BeginSignInRequest signInRequest;
+    private static final int REQ_ONE_TAP = 2;  // Can be any integer unique to the Activity.
+    private boolean showOneTapUI = true;
 
     @Override
     protected void onStart() {
@@ -48,12 +66,111 @@ public class MainActivity extends AppCompatActivity {
         setContentView(loginScreenBinding.getRoot());
         initUserData();
         setOnClick();
-        // Get Client
-        client = GoogleSignIn.getClient(this, Auth.gso);
     }
+    public void onGoogleSignIn(){
+        oneTapClient = Identity.getSignInClient(this);
+        signInRequest = BeginSignInRequest.builder()
+                .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
+                        .setSupported(true)
+                        .build())
+                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                        .setSupported(true)
+                        // Your server's client ID, not your Android client ID.
+                        .setServerClientId(getString(R.string.default_web_client_id))
+                        // Only show accounts previously used to sign in.
+                        .setFilterByAuthorizedAccounts(true)
+                        .build())
+                // Automatically sign in when exactly one credential is retrieved.
+                .setAutoSelectEnabled(true)
+                .build();
+        oneTapClient.beginSignIn(signInRequest)
+                .addOnSuccessListener(this, new OnSuccessListener<BeginSignInResult>() {
+                    @Override
+                    public void onSuccess(BeginSignInResult result) {
+                        try {
+                            startIntentSenderForResult(
+                                    result.getPendingIntent().getIntentSender(), REQ_ONE_TAP,
+                                    null, 0, 0, 0);
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.e("TAGBECHJ", "Couldn't start One Tap UI: " + e.getLocalizedMessage());
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // No saved credentials found. Launch the One Tap sign-up flow, or
+                        // do nothing and continue presenting the signed-out UI.
+                        Log.d("TAGBECHJ", e.getLocalizedMessage());
+                    }
+                });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        switch (requestCode) {
+            case REQ_ONE_TAP:
+                try {
+                    SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
+                    String idToken = credential.getGoogleIdToken();
+                    String email = credential.getId();
+                    String password = credential.getPassword();
+                    if (idToken !=  null) {
+                        // Got an ID token from Google. Use it to authenticate
+                        // with your backend.
+                        Log.d("TAGBECHJ", "Got ID token.");
+
+                        Auth.firebaseAuth().signInWithCredential(GoogleAuthProvider.getCredential(idToken, null))
+                                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            FirebaseUser user = null;
+                                            do{
+                                                user = Auth.firebaseAuth().getCurrentUser();
+                                            }while (user == null);
+                                            HashMap<String,String> map = new HashMap<>();
+                                            map.put("id", user.getUid());
+                                            Auth.sportClothsDatabase(MainActivity.this).getReference().child("users").child(user.getUid()).setValue(map);
+                                            // Proceed with your application logic after successful authentication
+                                            forwardPrime();
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            Log.w("TAGBECHJ", "signInWithCredential:failure", task.getException());
+                                            // Handle the failure. You can display an error message to the user or retry the authentication process.
+                                        }
+                                    }
+                                });
+                    } else if (password != null) {
+                        // Got a saved username and password. Use them to authenticate
+                        // with your backend.
+                        Log.d("TAGBECHJ", "Got password.");
+                    }
+                } catch (ApiException e) {
+                    // ...
+                    switch (e.getStatusCode()) {
+                        case CommonStatusCodes.CANCELED:
+                            Log.d("TAGBECHJ", "One-tap dialog was closed.");
+                            // Don't re-prompt the user.
+                            showOneTapUI = false;
+                            break;
+                        case CommonStatusCodes.NETWORK_ERROR:
+                            Log.d("TAGBECHJ", "One-tap encountered a network error.");
+                            // Try again or just ignore.
+                            break;
+                        default:
+                            Log.d("TAGBECHJ", "Couldn't get credential from result."
+                                    + e.getLocalizedMessage());
+                            break;
+                    }
+                }
+                break;
+        }
+
+    }
     private void setOnClick() {
-
         /*
         Set Click Event SIGN UP
          */
@@ -99,40 +216,19 @@ public class MainActivity extends AppCompatActivity {
         GOOGLE LOGIN
          */
         loginScreenBinding.googleLoginClick.setOnClickListener(v -> {
-            googleSignIn();
+//            signInRequest = BeginSignInRequest.builder()
+//                    .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+//                            .setSupported(true)
+//                            // Your server's client ID, not your Android client ID.
+//                            .setServerClientId(getString(R.string.default_web_client_id))
+//                            // Only show accounts previously used to sign in.
+//                            .setFilterByAuthorizedAccounts(true)
+//                            .build())
+//                    .build();
+            onGoogleSignIn();
         });
     }
 
-    /*
-    GOOGLE SIGN IN
-     */
-    private void googleSignIn() {
-        Intent i = client.getSignInIntent();
-        this.startActivityForResult(i, RC_SIGN_IN);
-    }
-
-    /*
-    GOOGLE SIGN IN
-     */
-    @Override
-    synchronized protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseUser = Auth.firebaseAuthen(account.getIdToken(),this);
-                firebaseUser = Auth.firebaseAuth().getCurrentUser();
-                /*
-                Forward to the next screen. Logout
-                */
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        // End the task, and got the user
-        forwardPrime();
-    }
     private void forwardPrime(){
         try {
             new Handler().postDelayed(new Runnable() {
@@ -185,6 +281,4 @@ public class MainActivity extends AppCompatActivity {
          */
         loginScreenBinding.setUser(user);
     }
-
-
 }

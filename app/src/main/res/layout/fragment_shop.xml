@@ -3,64 +3,63 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable
-            name="productList"
-            type="com.hdcompany.admin.model.Product" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@drawable/menu_background"
+        android:weightSum="9"
         tools:context=".fragment.ShopFragment">
-
-        <LinearLayout
-            android:id="@+id/search_and_chat"
+        <TextView
+            android:id="@+id/toBookingManager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/menu_background"
-            android:orientation="horizontal"
-            android:weightSum="10"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <!-- TODO: Update blank fragment layout -->
-            <EditText
-                android:id="@+id/search_bar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="5dp"
-                android:layout_weight="9.9"
-                android:background="@drawable/search_bar_background"
-                android:drawableStart="@drawable/search_icon"
-                android:drawableEnd="@drawable/camera_icon"
-                android:padding="7dp"
-                app:layout_constraintBottom_toTopOf="@id/shop_recycler_view"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/message"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="5dp"
-                android:layout_weight="0.1"
-                android:background="@drawable/message_circle_chat_icon"
-                app:layout_constraintBottom_toTopOf="@+id/shop_recycler_view"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/shop_recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/bg_login_screen"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_and_chat"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:text="Booking Manage"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="3"
+            android:textColor="@color/black"
+            android:padding="20dp"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:drawableEnd="@drawable/cart_not_select"
+            android:background="@color/white"
             />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/toFeedBackManager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:text="Feedback Manage"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="3"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:padding="20dp"
+            android:textSize="30sp"
+            android:drawableEnd="@drawable/news_notify_not_select"
+            android:background="@color/white"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:text="Sports Manage"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="3"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:padding="20dp"
+            android:id="@+id/toSportsManager"
+            android:drawableEnd="@drawable/profile_not_select"
+            android:background="@color/white"
+            />
+    </LinearLayout>
 </layout>

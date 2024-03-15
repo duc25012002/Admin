@@ -20,7 +20,6 @@ public class PrimeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         primeBinding = ActivityPrimeBinding.inflate(getLayoutInflater());
         setContentView(primeBinding.getRoot());
-
         setOnClick();
 
     }
@@ -120,5 +119,8 @@ public class PrimeActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    public void navigateFragments(int fragmentIndex){
+        primeBinding.viewPager2.setCurrentItem(fragmentIndex);
     }
 }

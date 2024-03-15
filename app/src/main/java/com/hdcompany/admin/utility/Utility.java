@@ -3,6 +3,7 @@ package com.hdcompany.admin.utility;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -48,4 +49,5 @@ public class Utility {
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(nfdNormalizedString).replaceAll("");
     }
+
 }

@@ -8,17 +8,17 @@ import com.hdcompany.admin.BR;
 import java.io.Serializable;
 
 public class Image extends BaseObservable implements Serializable {
-    private int id;
+    private long id;
     private String url;
     public Image(){
 
     }
-    public Image(int id,String url){
+    public Image(long id,String url){
         this.id = id;
         this.url = url;
     }
     @Bindable
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -12,6 +12,8 @@ public interface Constant {
 
     String CURRENCY = " VND ";
     int TYPE_PAYMENT_CASH = 1;
+    int TYPE_PAYMENT_BANKING = 2;
+    String PAYMENT_METHOD_BANKING = "CREDIT CARD";
     String PAYMENT_METHOD_CASH = " CASH ";
 
     // Key Intent

@@ -99,4 +99,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     // https://github.com/hdodenhof/CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // Add the Firebase Storage dependency
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
 }

@@ -23,9 +23,7 @@ import com.hdcompany.admin.utility.Utility;
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding registerBinding;
     private User user;
-    private GoogleSignInClient client;
     private FirebaseUser firebaseUser;
-    private static final int RC_SIGN_IN = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +32,6 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(registerBinding.getRoot());
         initUserData();
         setOnClick();
-        // Get Client
-        client = GoogleSignIn.getClient(this, Auth.gso);
     }
 
     private void setOnClick() {
@@ -65,8 +61,9 @@ public class RegisterActivity extends AppCompatActivity {
                 if (
                         !user.getUsername().equals("") && !user.getPassword().equals("")
                 ) {
-                    firebaseUser = Auth.loginAuth(this, user);
+                    firebaseUser = Auth.signUpAuth(this, user);
                     firebaseUser = Auth.firebaseAuth().getCurrentUser();
+                    forwardPrime();
                 } else {
                     Toast.makeText(this, "Please don't leave any empty information!", Toast.LENGTH_SHORT).show();
                 }
@@ -79,35 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
             CLICK TO GOOGLE SIGN IN
          */
         registerBinding.googleLoginClick.setOnClickListener(v -> {
-            googleSignIn();
         });
-    }
-
-    /*
-        GOOGLE SIGN IN
-     */
-    private void googleSignIn() {
-        Intent i = client.getSignInIntent();
-        this.startActivityForResult(i, RC_SIGN_IN);
-    }
-
-    /*
-        GOOGLE SIGN IN
-     */
-    @Override
-    synchronized protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseUser = Auth.firebaseAuthen(account.getIdToken(),this);
-                firebaseUser = Auth.firebaseAuth().getCurrentUser();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        forwardPrime();
     }
 
     private void forwardPrime(){
@@ -124,7 +93,6 @@ public class RegisterActivity extends AppCompatActivity {
                             System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email);
                         }
                         takeLoginPrimeAction();
-
                     } catch (Exception e) {
                         for (int i = 0; i < 10; i++) {
                             System.out.println("LOGIN ERROR");
@@ -137,26 +105,19 @@ public class RegisterActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void takeLoginPrimeAction(){
         this.startActivity(new Intent(this, PrimeActivity.class));
         this.finish();
     }
-    /*
-        FORWARD TO LOGIN
-     */
+
     private void forwardToLogin() {
         Intent i = new Intent(this, MainActivity.class);
         this.startActivity(i);
         this.finish();
     }
 
-    /*
-        INIT USER BINDING IN VIEW
-     */
     private void initUserData() {
         this.user = new User();
         System.out.println("User: " + this.user.toString());

@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@color/bg_login_screen"
-    tools:context=".activity.AdminActivity">
+    android:layout_height="match_parent"
+    tools:context=".activity.BookingAdminActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:background="@drawable/menu_background"
         android:gravity="center"
-        android:text="Sports Manager"
+        android:text="Booking Manager"
         android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="34sp"
@@ -24,24 +24,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sport_recycler_view"
+        android:layout_margin="16dp"
+        android:id="@+id/recyclerViewBooking"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <ImageView
-        android:id="@+id/addNewSportClothsButton"
-        app:srcCompat="@drawable/add_sign"
-        android:src="@drawable/add_sign"
-        android:textAlignment="center"
-        android:foregroundGravity="center"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

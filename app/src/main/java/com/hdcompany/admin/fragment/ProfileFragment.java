@@ -66,10 +66,14 @@ public class ProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        do{
-            firebaseUser = Auth.firebaseAuth().getCurrentUser();
-        }while (firebaseUser == null);
-        user = new User(firebaseUser.getEmail(),"");
+       try{
+           do{
+               firebaseUser = Auth.firebaseAuth().getCurrentUser();
+           }while (firebaseUser == null);
+           user = new User(firebaseUser.getEmail(),"");
+       }catch (Exception e){
+           e.printStackTrace();
+       }
     }
 
     /*
@@ -86,13 +90,18 @@ public class ProfileFragment extends Fragment {
         this.context = profileBinding.getRoot().getContext();
         profileBinding.setUser(user);
 
-        if(user.getUsername().equals("bechjkjen@gmail.com") || user.getUsername().equals("ductrieuhoang@gmail.com") || user.getUsername().equals("neikihceb@gmail.com")){
-            profileBinding.toAdminButton.setOnClickListener(v->{
-                toAdmin();
-            });
-            Toast.makeText(context, "Login as admin activated!", Toast.LENGTH_SHORT).show();
-            profileBinding.textViewAdminAccessibility.setText(R.string.admin_accessed);
+        if(user != null && user.getUsername() != null){
+            if(user.getUsername().equals("admin@admin.com")||user.getUsername().equals("bechjkjen@gmail.com") || user.getUsername().equals("ductrieuhoang@gmail.com") || user.getUsername().equals("neikihceb@gmail.com")){
+                profileBinding.toAdminButton.setVisibility(View.VISIBLE);
+                profileBinding.toAdminButton.setOnClickListener(v->{
+                    toAdmin();
+                });
+                Toast.makeText(context, "Login as admin activated!", Toast.LENGTH_SHORT).show();
+                profileBinding.textViewAdminAccessibility.setText(R.string.admin_accessed);
 
+            }else {
+                profileBinding.toAdminButton.setVisibility(View.GONE);
+            }
         }
 
         profileBinding.signOutButton.setOnClickListener(v->{
