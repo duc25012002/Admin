@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -20,6 +21,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         FirebaseApp.initializeApp(this);
+        FirebaseAuth.getInstance();
         sportClothsDatabase = FirebaseDatabase.getInstance(FirebaseApp.getInstance());
         sportClothsFirebaseStorage = FirebaseStorage.getInstance(FirebaseApp.getInstance());
 

@@ -34,9 +34,11 @@ public class Auth {
     public static FirebaseAuth firebaseAuth() {
         return FirebaseAuth.getInstance();
     }
-    public static FirebaseStorage sportClothesFireStorage(Context context){
+
+    public static FirebaseStorage sportClothesFireStorage(Context context) {
         return MyApplication.get(context).getSportClothsFirebaseStorage();
     }
+
     public static FirebaseDatabase sportClothsDatabase(Context context) {
         return MyApplication.get(context).getSportClothsDatabase();
     }
@@ -52,10 +54,11 @@ public class Auth {
     public static Query sportClothsDBFeedbackReferenceQuery(@NonNull Context context) {
         return sportClothsDatabase(context).getReference("/feedback");
     }
+
     /*
     LOGIN USE EMAIL AND PASSWORD
      */
-    public static FirebaseUser loginAuth(@NonNull Activity activity, User user) {
+    synchronized public static FirebaseUser loginAuth(@NonNull Activity activity, User user) {
         firebaseAuth().signInWithEmailAndPassword(user.getUsername().trim(), user.getPassword().trim()).addOnCompleteListener(
                 activity,
                 task -> {
@@ -79,33 +82,26 @@ public class Auth {
     /*
     SIGN UP USE EMAIL AND PASSWORD
      */
-    public static FirebaseUser signUpAuth(@NonNull Activity activity, User user) {
+    synchronized public static void signUpAuth(@NonNull Activity activity, User user) {
+
         firebaseAuth().createUserWithEmailAndPassword(user.getUsername().trim(), user.getPassword().trim()).addOnCompleteListener(
                 task -> {
                     if (task.isSuccessful()) {
-
-                        // Sign in success, update UI with the signed-in user's information
-                        Toast.makeText(activity, "Sign up with Email & Password success!",
-                                Toast.LENGTH_SHORT).show();
-                        firebaseAuth().getCurrentUser();
-//                        Log.d(TAG, "createUserWithEmail:success");
-//                        FirebaseUser user = mAuth.getCurrentUser();
-//                        updateUI(user);
-
+                        if(task.isComplete()){
+                            // Sign in success, update UI with the signed-in user's information
+                            Toast.makeText(activity, "Sign up with Email & Password success!",
+                                    Toast.LENGTH_SHORT).show();
+                            firebaseAuth().getCurrentUser();
+                        }
                     } else {
-                        // If sign in fails, display a message to the user.
-//                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         Toast.makeText(activity, "Sign up with Email & Password failed!",
                                 Toast.LENGTH_SHORT).show();
                         user.setUsername("");
                         user.setPassword("");
-//                        updateUI(null);
                     }
                 }
         );
-        return firebaseAuth().getCurrentUser();
     }
-
     /*
     Get product in a limited items
      */
@@ -115,6 +111,7 @@ public class Auth {
         }
         return sportClothsDBSportsReferenceQuery(context).orderByKey().startAfter(key).limitToFirst(20);
     }
+
     public static Query getLimitedFeedbackClothes(String key, @NonNull Context context) {
         if (key == null) {
             return sportClothsDBFeedbackReferenceQuery(context).orderByKey().limitToFirst(20);

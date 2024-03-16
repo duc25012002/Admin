@@ -67,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
         initUserData();
         setOnClick();
     }
-    public void onGoogleSignIn(){
+
+    synchronized public void onGoogleSignIn() {
         oneTapClient = Identity.getSignInClient(this);
         signInRequest = BeginSignInRequest.builder()
                 .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
@@ -105,10 +106,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
+    @Override
+    synchronized protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        firebaseUser = Auth.firebaseAuth().getCurrentUser();
         switch (requestCode) {
             case REQ_ONE_TAP:
                 try {
@@ -116,26 +118,30 @@ public class MainActivity extends AppCompatActivity {
                     String idToken = credential.getGoogleIdToken();
                     String email = credential.getId();
                     String password = credential.getPassword();
-                    if (idToken !=  null) {
+                    if (idToken != null) {
                         // Got an ID token from Google. Use it to authenticate
                         // with your backend.
                         Log.d("TAGBECHJ", "Got ID token.");
-
+                        firebaseUser = Auth.firebaseAuth().getCurrentUser();
                         Auth.firebaseAuth().signInWithCredential(GoogleAuthProvider.getCredential(idToken, null))
                                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            FirebaseUser user = null;
-                                            do{
-                                                user = Auth.firebaseAuth().getCurrentUser();
-                                            }while (user == null);
-                                            HashMap<String,String> map = new HashMap<>();
-                                            map.put("id", user.getUid());
-                                            Auth.sportClothsDatabase(MainActivity.this).getReference().child("users").child(user.getUid()).setValue(map);
-                                            // Proceed with your application logic after successful authentication
-                                            forwardPrime();
+                                            if (task.isComplete()) {
+                                                // Sign in success, update UI with the signed-in user's information
+                                                firebaseUser = Auth.firebaseAuth().getCurrentUser();
+                                                HashMap<String, String> map = new HashMap<>();
+                                                map.put("id", firebaseUser.getUid());
+                                                map.put("email", email);
+                                                map.put("idToken", idToken);
+                                                Auth.sportClothsDatabase(MainActivity.this).getReference().child("users").child(firebaseUser.getUid()).setValue(map);
+                                                // Proceed with your application logic after successful authentication
+                                                if (firebaseUser != null) {
+                                                    forwardPrime();
+                                                }
+                                            }
+
                                         } else {
                                             // If sign in fails, display a message to the user.
                                             Log.w("TAGBECHJ", "signInWithCredential:failure", task.getException());
@@ -170,7 +176,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    private void setOnClick() {
+
+    synchronized private void setOnClick() {
         /*
         Set Click Event SIGN UP
          */
@@ -216,32 +223,18 @@ public class MainActivity extends AppCompatActivity {
         GOOGLE LOGIN
          */
         loginScreenBinding.googleLoginClick.setOnClickListener(v -> {
-//            signInRequest = BeginSignInRequest.builder()
-//                    .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-//                            .setSupported(true)
-//                            // Your server's client ID, not your Android client ID.
-//                            .setServerClientId(getString(R.string.default_web_client_id))
-//                            // Only show accounts previously used to sign in.
-//                            .setFilterByAuthorizedAccounts(true)
-//                            .build())
-//                    .build();
+
             onGoogleSignIn();
         });
     }
 
-    private void forwardPrime(){
+    synchronized private void forwardPrime() {
         try {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        do {
-                            firebaseUser = Auth.firebaseAuth().getCurrentUser();
-                        } while (firebaseUser == null);
-                        String email = firebaseUser.getEmail();
-                        for (int i = 0; i < 10; i++) {
-                            System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email);
-                        }
+                        firebaseUser = Auth.firebaseAuth().getCurrentUser();
                         takeLoginPrimeAction();
 
                     } catch (Exception e) {
@@ -258,9 +251,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void takeLoginPrimeAction(){
-        this.startActivity(new Intent(this, PrimeActivity.class));
+    private void takeLoginPrimeAction() {
+        firebaseUser = Auth.firebaseAuth().getCurrentUser();
+        if (firebaseUser != null) {
+            this.startActivity(new Intent(this, PrimeActivity.class));
+            this.finish();
+        }
     }
+
     /*
     FORWARD TO SIGN UP
      */

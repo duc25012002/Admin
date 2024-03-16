@@ -23,7 +23,13 @@ import com.hdcompany.admin.utility.Utility;
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding registerBinding;
     private User user;
-    private FirebaseUser firebaseUser = Auth.firebaseAuth().getCurrentUser();;
+    private FirebaseUser firebaseUser;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseUser = Auth.firebaseAuth().getCurrentUser();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         setOnClick();
     }
 
-    private void setOnClick() {
+    synchronized private void setOnClick() {
 
         /*
             CLICK TO FORWARD TO LOGIN SCREEN
@@ -58,10 +64,8 @@ public class RegisterActivity extends AppCompatActivity {
         registerBinding.signupButton.setOnClickListener(v -> {
             Utility.hideSoftKeyboard(this);
             try {
-                if (
-                        !user.getUsername().equals("") && !user.getPassword().equals("")
-                ) {
-                    firebaseUser = Auth.signUpAuth(this, user);
+                if (!user.getUsername().equals("") && !user.getPassword().equals("")) {
+                     Auth.signUpAuth(this, user);
                     firebaseUser = Auth.firebaseAuth().getCurrentUser();
                     forwardPrime();
                 } else {
@@ -79,37 +83,35 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void forwardPrime(){
+    synchronized private void forwardPrime() {
         try {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        do {
-                            firebaseUser = Auth.firebaseAuth().getCurrentUser();
-                        } while (firebaseUser == null);
-                        String email = firebaseUser.getEmail();
-                        for (int i = 0; i < 10; i++) {
-                            System.out.println("LOGIN EMAIL FROM FIREBASE USER : " + email);
-                        }
+                        firebaseUser = Auth.firebaseAuth().getCurrentUser();
                         takeLoginPrimeAction();
+
                     } catch (Exception e) {
                         for (int i = 0; i < 10; i++) {
-                            System.out.println("LOGIN ERROR");
+                            System.out.println("LOGIN ERROR " + e.getMessage());
                         }
                         e.printStackTrace();
                         Toast.makeText(RegisterActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     }
                 }
-            }, 1000);
+            }, 2000);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void takeLoginPrimeAction(){
-        this.startActivity(new Intent(this, PrimeActivity.class));
-        this.finish();
+    private void takeLoginPrimeAction() {
+        firebaseUser = Auth.firebaseAuth().getCurrentUser();
+        if(firebaseUser != null){
+            this.startActivity(new Intent(this, PrimeActivity.class));
+            this.finish();
+        }
     }
 
     private void forwardToLogin() {
