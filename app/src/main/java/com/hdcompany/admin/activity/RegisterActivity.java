@@ -23,7 +23,7 @@ import com.hdcompany.admin.utility.Utility;
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding registerBinding;
     private User user;
-    private FirebaseUser firebaseUser;
+    private FirebaseUser firebaseUser = Auth.firebaseAuth().getCurrentUser();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

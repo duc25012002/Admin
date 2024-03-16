@@ -43,7 +43,7 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
     private LoginScreenBinding loginScreenBinding;
     private User user;
-    private FirebaseUser firebaseUser;
+    private FirebaseUser firebaseUser = Auth.firebaseAuth().getCurrentUser();
 
     private SignInClient oneTapClient;
     private BeginSignInRequest signInRequest;

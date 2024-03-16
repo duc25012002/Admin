@@ -62,7 +62,7 @@ public class Auth {
                     if (task.isSuccessful()) {
 
                         System.out.println("Sign in with Email & Password success!");
-//                            FirebaseUser signed = firebaseAuth.getCurrentUser();
+                        firebaseAuth().getCurrentUser();
                         Toast.makeText(activity, "Sign in with Email & Password success!", Toast.LENGTH_SHORT).show();
 
                     } else {
@@ -87,6 +87,7 @@ public class Auth {
                         // Sign in success, update UI with the signed-in user's information
                         Toast.makeText(activity, "Sign up with Email & Password success!",
                                 Toast.LENGTH_SHORT).show();
+                        firebaseAuth().getCurrentUser();
 //                        Log.d(TAG, "createUserWithEmail:success");
 //                        FirebaseUser user = mAuth.getCurrentUser();
 //                        updateUI(user);
